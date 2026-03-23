@@ -5548,30 +5548,15 @@ function buildMasterProteinData() {
 }
 
 async function fetchNearbyRestaurants(lat, lon) {
-    const radiusInMeters = 16093.4; // 10 miles
-    const query = `[out:json][timeout:25];(node["amenity"~"restaurant|fast_food"]["name"](around:${radiusInMeters},${lat},${lon});node["shop"="convenience"]["name"](around:${radiusInMeters},${lat},${lon});node["amenity"="fuel"]["name"](around:${radiusInMeters},${lat},${lon}););out;`;
-    const endpoints = [
-        'https://overpass-api.de/api/interpreter',
-        'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
-        'https://overpass.kumi.systems/api/interpreter'
-    ];
-    for (const url of endpoints) {
-        try {
-            const resp = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'data=' + encodeURIComponent(query)
-            });
-            if (!resp.ok) continue;
-            const data = await resp.json();
-            if (!data.elements || data.elements.length === 0) continue;
-            return data.elements.map(el => {
-                if (el.center) { el.lat = el.center.lat; el.lon = el.center.lon; }
-                return el;
-            });
-        } catch(e) { continue; }
+    try {
+        const resp = await fetch(`/.netlify/functions/places?lat=${lat}&lon=${lon}`);
+        if (!resp.ok) throw new Error('status ' + resp.status);
+        const data = await resp.json();
+        return (data.results || []).map(r => ({ tags: { name: r.name }, lat: r.lat, lon: r.lon }));
+    } catch(e) {
+        console.error('Places failed:', e.message);
+        return [];
     }
-    return [];
 }
 
 document.addEventListener('DOMContentLoaded', () => {
