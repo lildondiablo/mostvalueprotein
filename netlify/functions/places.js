@@ -3,20 +3,31 @@ exports.handler = async (event) => {
   const { lat, lon } = event.queryStringParameters || {};
   if (!lat || !lon) return { statusCode: 400, body: 'Missing lat/lon' };
 
-  const types = ['restaurant', 'meal_takeaway', 'convenience_store', 'gas_station'];
   const results = [];
   const seen = new Set();
 
-  for (const type of types) {
+  const chains = [
+    "McDonald's", "Taco Bell", "Subway", "Burger King", "Wendy's",
+    "Chick-fil-A", "Popeyes", "KFC", "Panda Express", "Chipotle",
+    "Little Caesars", "Domino's", "Arby's", "Sonic", "Dairy Queen",
+    "Hardee's", "Wingstop", "Panera Bread", "IHOP", "Starbucks",
+    "Casey's", "Huck's", "7-Eleven", "Thorntons"
+  ];
+
+  for (const chain of chains) {
     try {
-      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=24140&type=${type}&key=${GOOGLE_API_KEY}`;
+      const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(chain)}&location=${lat},${lon}&radius=24140&key=${GOOGLE_API_KEY}`;
       const resp = await fetch(url);
       const data = await resp.json();
       if (data.results) {
-        data.results.forEach(place => {
+        data.results.slice(0, 3).forEach(place => {
           if (!seen.has(place.place_id)) {
             seen.add(place.place_id);
-            results.push({ name: place.name, lat: place.geometry.location.lat, lon: place.geometry.location.lng });
+            results.push({
+              name: chain,
+              lat: place.geometry.location.lat,
+              lon: place.geometry.location.lng
+            });
           }
         });
       }
