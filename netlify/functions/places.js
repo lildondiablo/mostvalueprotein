@@ -1,5 +1,5 @@
 exports.handler = async (event) => {
-  const GOOGLE_API_KEY = 'AIzaSyD4avN21d4mbuxLMdqFh-9ngvbMe0xMjL8';
+  const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;;
   const { lat, lon } = event.queryStringParameters || {};
   if (!lat || !lon) return { statusCode: 400, body: 'Missing lat/lon' };
 
