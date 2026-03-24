@@ -2085,6 +2085,44 @@ body.drawer-open-no-scroll {
   border-radius: 10px;
   cursor: pointer;
 }
+
+/* --- Favorites --- */
+.qcard-fav-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 6px;
+  transition: transform 0.15s ease;
+  flex-shrink: 0;
+}
+.qcard-fav-btn:hover { transform: scale(1.2); }
+.fav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 8px;
+  border-radius: 8px;
+  border-bottom: 1px solid rgba(11,17,32,0.06);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.fav-item:hover { background: rgba(67,56,202,0.04); }
+.fav-item:last-child { border-bottom: none; }
+.fav-item-name { font-weight: 600; font-size: 0.9rem; }
+.fav-item-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.fav-item-actions { display: flex; gap: 6px; align-items: center; }
+.fav-remove-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 4px;
+  transition: color 0.15s ease;
+}
+.fav-remove-btn:hover { color: #ef4444; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -2171,6 +2209,12 @@ body.drawer-open-no-scroll {
           </div>
         </section>
 
+        <!-- My Favorites -->
+        <section id="favorites-section" class="card" style="display:none;">
+          <h3 style="margin:0 0 12px 0;">⭐ My Favorites</h3>
+          <div id="favorites-list" class="list"></div>
+        </section>
+
         <!-- Quick Examples -->
         <section id="quick-examples-section" class="card">
           <h3 style="margin:0 0 12px 0">Quick Examples</h3>
@@ -2180,77 +2224,77 @@ body.drawer-open-no-scroll {
                 <div class="food">Chicken Breast</div>
                 <div class="small">$6.99 / 100g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Eggs" data-calories="840" data-store="instacart" data-query="eggs" data-price="2.00" data-protein="48">
               <div class="meta">
                 <div class="food">Eggs</div>
                 <div class="small">$2.00 / 48g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Greek Yogurt" data-calories="100" data-store="instacart" data-query="greek yogurt" data-price="1.50" data-protein="18">
               <div class="meta">
                 <div class="food">Greek Yogurt</div>
                 <div class="small">$1.50 / 18g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Protein Powder" data-calories="120" data-store="amazon" data-query="protein powder" data-price="25.00" data-protein="240">
               <div class="meta">
                 <div class="food">Protein Powder</div>
                 <div class="small">$25.00 / 240g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Protein Bar" data-calories="220" data-store="amazon" data-query="protein bars" data-price="2.50" data-protein="20">
               <div class="meta">
                 <div class="food">Protein Bar</div>
                 <div class="small">$2.50 / 20g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Canned Tuna" data-calories="150" data-store="amazon" data-query="canned tuna bulk" data-price="3.00" data-protein="66">
               <div class="meta">
                 <div class="food">Canned Tuna</div>
                 <div class="small">$3.00 / 66g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Cottage Cheese" data-calories="400" data-store="instacart" data-query="cottage cheese" data-price="3.50" data-protein="56">
               <div class="meta">
                 <div class="food">Cottage Cheese</div>
                 <div class="small">$3.50 / 56g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Lean Ground Beef" data-calories="1150" data-store="instacart" data-query="ground beef" data-price="6.00" data-protein="88">
               <div class="meta">
                 <div class="food">Lean Ground Beef</div>
                 <div class="small">$6.00 / 88g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Rotisserie Chicken" data-calories="1500" data-store="instacart" data-query="rotisserie chicken" data-price="7.99" data-protein="140">
               <div class="meta">
                 <div class="food">Rotisserie Chicken</div>
                 <div class="small">$7.99 / 140g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Chicken Thighs" data-calories="900" data-store="instacart" data-query="chicken thighs" data-price="3.50" data-protein="80">
               <div class="meta">
                 <div class="food">Chicken Thighs</div>
                 <div class="small">$3.50 / 80g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
             <div class="qcard" data-name="Sardines" data-calories="190" data-store="amazon" data-query="canned sardines" data-price="1.50" data-protein="24">
               <div class="meta">
                 <div class="food">Sardines</div>
                 <div class="small">$1.50 / 24g protein</div>
               </div>
-              <button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button>
+              <div style="display:flex;flex-direction:column;gap:2px;"><button class="qcard-cart-btn" onclick="event.stopPropagation(); openBuyPopup(this.closest('.qcard'))" title="Buy this">🛒</button><button class="qcard-fav-btn" onclick="event.stopPropagation(); toggleFavorite(this.closest('.qcard'))" title="Save favorite">🤍</button></div>
             </div>
           </div>
         </section>
@@ -6746,6 +6790,152 @@ function shareNearMeResult(btn) {
   });
 }
 window.shareNearMeResult = shareNearMeResult;
+</script>
+
+<script>
+// --- Favorites System ---
+const FAVS_KEY = 'mvp_favorites';
+
+function loadFavorites() {
+  try { return JSON.parse(localStorage.getItem(FAVS_KEY)) || []; }
+  catch(e) { return []; }
+}
+
+function saveFavorites(favs) {
+  localStorage.setItem(FAVS_KEY, JSON.stringify(favs));
+}
+
+function toggleFavorite(card) {
+  if (!card) return;
+  const item = {
+    name: card.dataset.name,
+    price: card.dataset.price,
+    protein: card.dataset.protein,
+    calories: card.dataset.calories || '0',
+    store: card.dataset.store || '',
+    query: card.dataset.query || card.dataset.name
+  };
+  let favs = loadFavorites();
+  const idx = favs.findIndex(f => f.name === item.name);
+  if (idx >= 0) {
+    favs.splice(idx, 1);
+  } else {
+    favs.push(item);
+  }
+  saveFavorites(favs);
+  renderFavorites();
+  updateFavButtons();
+}
+
+function removeFavorite(name) {
+  const favs = loadFavorites().filter(f => f.name !== name);
+  saveFavorites(favs);
+  renderFavorites();
+  updateFavButtons();
+}
+
+function updateFavButtons() {
+  const favs = loadFavorites();
+  const names = new Set(favs.map(f => f.name));
+  document.querySelectorAll('.qcard-fav-btn').forEach(btn => {
+    const card = btn.closest('.qcard');
+    if (card) btn.textContent = names.has(card.dataset.name) ? '❤️' : '🤍';
+  });
+  // Update popup heart button if open
+  const popupHeart = document.getElementById('buy-popup-fav-btn');
+  if (popupHeart) {
+    const name = document.getElementById('buy-popup-name').textContent;
+    popupHeart.textContent = names.has(name) ? '❤️ Saved' : '🤍 Save Favorite';
+  }
+}
+
+function renderFavorites() {
+  const favs = loadFavorites();
+  const section = document.getElementById('favorites-section');
+  const list = document.getElementById('favorites-list');
+  if (!section || !list) return;
+
+  if (favs.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  list.innerHTML = '';
+  favs.forEach(item => {
+    const ppd = item.price > 0 ? (item.protein / item.price).toFixed(1) : '—';
+    const row = document.createElement('div');
+    row.className = 'fav-item';
+    row.innerHTML = `
+      <div onclick="loadFavoriteIntoCalc('${item.name}', '${item.price}', '${item.protein}')">
+        <div class="fav-item-name">${item.name}</div>
+        <div class="fav-item-meta">${ppd}g/$ • $${parseFloat(item.price).toFixed(2)} • ${Math.round(item.protein)}g protein</div>
+      </div>
+      <div class="fav-item-actions">
+        <button class="qcard-cart-btn" onclick="openBuyPopupFromFav('${item.name}')" title="Buy">🛒</button>
+        <button class="fav-remove-btn" onclick="removeFavorite('${item.name}')" title="Remove">✕</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function loadFavoriteIntoCalc(name, price, protein) {
+  document.getElementById('food-name').value = name;
+  document.getElementById('price').value = price;
+  document.getElementById('protein').value = protein;
+  document.getElementById('calc-btn').click();
+  if (window.innerWidth <= 768) {
+    document.getElementById('calculator-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function openBuyPopupFromFav(name) {
+  const favs = loadFavorites();
+  const item = favs.find(f => f.name === name);
+  if (!item) return;
+  // Create a fake card element
+  const card = document.createElement('div');
+  card.dataset.name = item.name;
+  card.dataset.price = item.price;
+  card.dataset.protein = item.protein;
+  card.dataset.calories = item.calories;
+  card.dataset.store = item.store;
+  card.dataset.query = item.query;
+  openBuyPopup(card);
+}
+
+// Hook into openBuyPopup to add heart button
+const _origOpenBuyPopup2 = window.openBuyPopup;
+window.openBuyPopup = function(card) {
+  _origOpenBuyPopup2(card);
+  const popup = document.getElementById('buy-popup');
+  if (!popup) return;
+
+  // Remove existing fav btn
+  const existing = document.getElementById('buy-popup-fav-btn');
+  if (existing) existing.remove();
+
+  const favs = loadFavorites();
+  const isFaved = favs.some(f => f.name === card.dataset.name);
+
+  const btn = document.createElement('button');
+  btn.id = 'buy-popup-fav-btn';
+  btn.className = 'btn';
+  btn.style.cssText = 'width:100%; padding:11px; margin-top:4px; font-size:0.95rem; font-weight:600;';
+  btn.textContent = isFaved ? '❤️ Saved' : '🤍 Save Favorite';
+  btn.onclick = () => {
+    toggleFavorite(card);
+    btn.textContent = loadFavorites().some(f => f.name === card.dataset.name) ? '❤️ Saved' : '🤍 Save Favorite';
+  };
+
+  const closeBtn = document.getElementById('buy-popup-close');
+  if (closeBtn) closeBtn.before(btn);
+};
+
+// Init
+renderFavorites();
+updateFavButtons();
 </script>
 </body>
 </html>
