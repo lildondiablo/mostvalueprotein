@@ -44,14 +44,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg1:#f0f4ff;
-    --bg2:#e6f0fa;
-    --card:#ffffff;
-    --muted:#5b6478;
-    --accent:#4338ca;
-    --glass: rgba(255,255,255,0.7);
+    --bg1:#080c14;
+    --bg2:#0d1424;
+    --card:#111827;
+    --muted:rgba(180,196,230,0.5);
+    --accent:#00c2ff;
+    --glass:rgba(11,16,28,0.92);
     --radius:14px;
-    --shadow: 0 6px 24px rgba(18,38,63,0.11);
+    --shadow:0 6px 24px rgba(0,0,0,0.45);
     --font-display: 'Bebas Neue', 'Arial Black', sans-serif;
     --font-body: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   }
@@ -59,9 +59,9 @@
   body{
     margin:0;
     font-family: var(--font-body);
-    background: linear-gradient(160deg,#e8eeff 0%,#d6ecfa 50%,#e0f7ef 100%);
+    background: #080c14;
     -webkit-font-smoothing:antialiased;
-    color:#0b1220;
+    color:#e2e8f8;
     padding:28px;
     padding-top:48px;
     padding-left:52px;
@@ -76,7 +76,7 @@
   h1{margin:0 0 10px 0;font-family:var(--font-display);font-size:3rem;letter-spacing:0.04em;line-height:1.05;}
   .h1-highlight{font-size:1em;background:linear-gradient(45deg,#f97316,#ef4444);-webkit-background-clip:text;background-clip:text;color:transparent;}
   p.subtitle{margin:0 auto;max-width:520px;color:var(--muted);font-size:1rem;line-height:1.5;}
-  .prices-note{margin:8px auto 0;font-size:0.78rem;color:var(--muted);opacity:0.7;text-align:center;}
+  .prices-note{margin:6px auto 0;font-size:0.62rem;color:var(--muted);opacity:0.5;text-align:center;}
   .hero-cta{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;}
 
   #fixed-near-me-cta{
@@ -101,16 +101,57 @@
   .hero-secondary{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:0.85rem;}
   .seg{display:flex;gap:10px;}
 
+  #grocery-near-me-cta{
+    width:100%;max-width:480px;
+    padding:14px 20px;border-radius:14px;
+    background:linear-gradient(135deg,#00c2ff22,#00c2ff11);
+    border:1.5px solid rgba(0,194,255,0.4);
+    color:#00c2ff;font-weight:800;font-size:1rem;
+    font-family:var(--font-body);cursor:pointer;
+    transition:transform 0.15s ease,box-shadow 0.15s ease;
+    letter-spacing:0.01em;
+  }
+  #grocery-near-me-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,194,255,0.2);}
+  #grocery-near-me-cta:active{transform:scale(0.98);}
+
+  /* Grocery Near-Me Modal */
+  #grocery-near-me-overlay{position:fixed;inset:0;background-color:rgba(0,0,0,0.7);z-index:9998;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+  #grocery-near-me-overlay.open{opacity:1;pointer-events:auto;}
+  #grocery-near-me-card{width:100%;max-width:620px;padding:14px 14px 32px;background:var(--card);border:1px solid rgba(255,255,255,0.07);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;max-height:85vh;position:relative;border-radius:20px 20px 0 0;transform:translateY(100%);}
+  #grocery-near-me-overlay.open #grocery-near-me-card{transform:translateY(0);}
+  #grocery-near-me-store-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:12px;}
+  .grocery-store-tab{padding:10px 4px;border-radius:12px;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);cursor:pointer;font-family:var(--font-body);transition:all 0.15s ease;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .grocery-store-tab .tab-icon{font-size:1.4rem;line-height:1;}
+  .grocery-store-tab .tab-name{font-size:0.68rem;font-weight:900;color:#e2e8f8;line-height:1.2;}
+  .grocery-store-tab .tab-dist{font-size:0.55rem;color:#10b981;font-weight:700;margin-top:1px;}
+  .grocery-store-tab:hover{border-color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.1);}
+  .grocery-store-tab.active{border-color:#00c2ff;background:rgba(0,194,255,0.15);box-shadow:0 0 14px rgba(0,194,255,0.2);}
+  .grocery-store-tab.active .tab-name{color:#00c2ff;}
+  .grocery-store-tab.active.nearby{border-color:#10b981;background:rgba(16,185,129,0.15);}
+  #grocery-near-me-list{overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;}
+  .grocery-item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.06);gap:10px;}
+  .grocery-item-info{flex:1;min-width:0;}
+  .grocery-item-name{font-weight:700;font-size:0.88rem;color:#e2e8f8;}
+  .grocery-item-meta{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+  .grocery-item-stat{font-size:0.62rem;color:var(--muted);font-style:italic;opacity:0.75;}
+  .grocery-item-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;align-items:flex-end;}
+  .grocery-cart-add{background:linear-gradient(90deg,#f97316,#ef4444);color:white;border:none;border-radius:8px;padding:6px 10px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;transition:opacity 0.15s ease;}
+  .grocery-cart-add:hover{opacity:0.85;}
+  .grocery-buy-now{display:block;text-align:center;background:linear-gradient(90deg,#f97316,#ef4444);color:white;font-size:0.72rem;font-weight:800;text-decoration:none;padding:5px 8px;border-radius:7px;white-space:nowrap;transition:opacity 0.15s ease;}
+  .grocery-buy-now:hover{opacity:0.85;}
+  .grocery-buy-link{font-size:0.62rem;color:var(--muted);text-decoration:none;font-weight:500;white-space:nowrap;text-align:center;display:block;}
+  .grocery-buy-link:hover{color:var(--accent);}
+
   /* ── BUTTONS ── */
   .btn{
-    background:linear-gradient(180deg,#fff,#f5f7ff);border:0;
-    padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);
-    cursor:pointer;font-weight:600;color:#0f1724;font-family:var(--font-body);
+    background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);
+    padding:10px 14px;border-radius:12px;box-shadow:none;
+    cursor:pointer;font-weight:600;color:#e2e8f8;font-family:var(--font-body);
     transition:transform .18s ease,box-shadow .18s ease;position:relative;overflow:visible;
   }
   .btn:hover{transform:translateY(-3px);}
   .primary{
-    background:linear-gradient(90deg,#4338ca,#0ea5e9);color:white;
+    background:linear-gradient(90deg,#00c2ff,#0ea5e9);color:white;
     padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-family:var(--font-body);
     box-shadow:0 8px 30px rgba(67,56,202,0.22);transition:transform .16s ease;font-weight:700;
   }
@@ -122,12 +163,13 @@
   .calculator-column{position:sticky;top:28px;display:flex;flex-direction:column;gap:18px;min-width:0;}
 
   /* ── CARDS ── */
-  .card{background:linear-gradient(180deg,rgba(255,255,255,0.9),var(--card));border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+  .card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.05);}
   h3{margin-bottom:8px!important;font-family:var(--font-display);letter-spacing:0.03em;font-size:1.4rem;}
 
   /* ── QUICK EXAMPLES ── */
   .quick{display:flex;gap:12px;flex-wrap:wrap;}
-  .qcard{background:linear-gradient(180deg,rgba(255,255,255,0.9),var(--card));border-radius:8px;padding:6px 10px;min-width:100px;flex:1 1 100px;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;display:flex;justify-content:space-between;align-items:center;}
+  .item-stat{display:block;font-size:0.62rem;color:var(--muted);font-style:italic;margin-top:1px;opacity:0.75;line-height:1.3;}
+  .qcard{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:6px 10px;min-width:100px;flex:1 1 100px;box-shadow:none;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;display:flex;justify-content:space-between;align-items:center;}
   .qcard .meta{display:flex;flex-direction:column;gap:1px;}
   .qcard .food{font-weight:600;font-size:0.75rem;}
   .qcard .small{font-size:0.65rem;color:var(--muted);}
@@ -138,12 +180,13 @@
   .grid label{font-weight:600;text-align:right;}
   .input-wrapper{position:relative;}
   .calc-actions{justify-content:center;margin-top:16px;}
-  input[type="text"],input[type="number"]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(11,17,32,0.06);background:transparent;font-size:1rem;box-sizing:border-box;height:42px;font-family:var(--font-body);}
+  input[type="text"],input[type="number"]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f8;font-size:1rem;box-sizing:border-box;height:42px;font-family:var(--font-body);}
+  input[type="text"]::placeholder,input[type="number"]::placeholder{color:rgba(180,196,230,0.4);}
 
   /* ── RESULT ── */
-  .result{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;min-width:160px;justify-content:center;background:linear-gradient(180deg,#fdfdff,#ffffff);flex-direction:column;text-align:center;position:relative;}
+  .result{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;min-width:160px;justify-content:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);flex-direction:column;text-align:center;position:relative;}
   .result .label{font-size:0.85rem;color:var(--muted);margin-bottom:6px;}
-  .ppd-large{font-weight:900;font-size:1.6rem;line-height:1;color:#0b1220;letter-spacing:-0.01em;margin-bottom:8px;}
+  .ppd-large{font-weight:900;font-size:1.6rem;line-height:1;color:#e2e8f8;letter-spacing:-0.01em;margin-bottom:8px;}
   .badge{font-weight:700;padding:8px 10px;border-radius:10px;color:white;min-width:92px;text-align:center;}
   .green{background:linear-gradient(90deg,#059669,#10b981)}
   .yellow{background:linear-gradient(90deg,#d97706,#f59e0b)}
@@ -151,7 +194,7 @@
 
   /* ── LISTS ── */
   .list{display:grid;gap:6px;}
-  .list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:linear-gradient(180deg,#fff,#fafcff);box-shadow:0 6px 14px rgba(12,20,34,0.04);}
+  .list-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);box-shadow:none;}
   .muted{color:var(--muted);}
   .list-item .muted{text-align:right;min-width:80px;}
   .list-item[data-name]{transition:transform 0.2s ease,box-shadow 0.2s ease;cursor:pointer;}
@@ -159,7 +202,7 @@
   .note{color:var(--muted);font-size:0.9rem;margin-top:6px;}
 
   /* ── RESTAURANT ACCORDION ── */
-  .restaurant-accordion .item{border-bottom:1px solid rgba(11,17,32,0.06);}
+  .restaurant-accordion .item{border-bottom:1px solid rgba(255,255,255,0.06);}
   .restaurant-accordion .item:last-child{border-bottom:none;}
   .restaurant-header{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;cursor:pointer;font-weight:700;}
   .indicator{font-size:1.4rem;font-weight:400;color:var(--accent);}
@@ -170,7 +213,7 @@
 
   /* ── COLLAPSIBLE ── */
   .collapsible-content{max-height:0;overflow:hidden;transition:max-height 0.4s ease-out;border-top:0px solid transparent;padding-top:0;margin-top:0;}
-  .collapsible-content.expanded{border-top:1px solid rgba(11,17,32,0.08);padding-top:12px;margin-top:12px;}
+  .collapsible-content.expanded{border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;margin-top:12px;}
   .toggle-button-container{margin-top:12px;text-align:center;}
 
   /* ── FACE-OFF ── */
@@ -178,12 +221,12 @@
   .faceoff-selectors{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;}
   .faceoff-selector-wrapper{display:flex;flex-direction:column;gap:4px;}
   .faceoff-selector-wrapper label{font-size:0.9rem;font-weight:600;color:var(--muted);}
-  .faceoff-select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(11,17,32,0.08);background-color:var(--bg1);font-size:0.95rem;box-sizing:border-box;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");background-position:right 0.5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;font-family:var(--font-body);}
+  .faceoff-select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background-color:var(--bg2);color:#e2e8f8;font-size:0.95rem;box-sizing:border-box;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");background-position:right 0.5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;font-family:var(--font-body);}
   .faceoff-vs{font-size:1.2rem;font-weight:700;color:var(--muted);padding-bottom:8px;}
   .faceoff-action{text-align:center;}
-  #faceoff-results{margin-top:18px;border-top:1px solid rgba(11,17,32,0.08);padding-top:18px;}
+  #faceoff-results{margin-top:18px;border-top:1px solid rgba(255,255,255,0.07);padding-top:18px;}
   .faceoff-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center;}
-  .faceoff-result-item{padding:12px;border-radius:10px;background-color:var(--bg1);border:2px solid transparent;}
+  .faceoff-result-item{padding:12px;border-radius:10px;background-color:rgba(255,255,255,0.05);border:2px solid transparent;}
   .faceoff-result-item.winner{border-color:#10b981;box-shadow:0 4px 15px rgba(16,185,129,0.1);}
   .faceoff-result-item h4{margin:0 0 4px 0;font-size:1rem;}
   .faceoff-result-item .ppd{font-size:1.2rem;font-weight:700;color:var(--accent);}
@@ -192,7 +235,7 @@
 
   /* ── STACK BUILDER ── */
   #stack-builder{display:flex;flex-direction:column;gap:12px;position:relative;}
-  .stack-options{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding-bottom:12px;border-bottom:1px solid rgba(11,17,32,0.08);}
+  .stack-options{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07);}
   .stack-options .btn{flex:1 1 120px;font-size:0.85rem;padding:8px 10px;text-align:center;}
   .stack-current-state{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;}
   .stack-list-area h4,.stack-totals-area h4{margin:0 0 8px 0;font-size:0.95rem;}
@@ -207,22 +250,22 @@
   #stack-rating{padding:4px 8px;font-size:0.8rem;}
   .stack-actions{display:flex;justify-content:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
   .stack-search-container{position:relative;margin-bottom:8px;}
-  .stack-search-input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(11,17,32,0.08);background:var(--bg1);font-size:0.95rem;box-sizing:border-box;font-family:var(--font-body);}
-  .stack-search-results{display:none;position:absolute;background:var(--card);border:1px solid rgba(11,17,32,0.08);border-radius:10px;box-shadow:var(--shadow);z-index:100;margin-top:4px;max-height:160px;overflow-y:auto;width:100%;box-sizing:border-box;}
+  .stack-search-input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f8;font-size:0.95rem;box-sizing:border-box;font-family:var(--font-body);}
+  .stack-search-results{display:none;position:absolute;background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:10px;box-shadow:var(--shadow);z-index:100;margin-top:4px;max-height:160px;overflow-y:auto;width:100%;box-sizing:border-box;}
   .stack-suggestion-item{padding:10px 14px;font-size:0.9rem;cursor:pointer;transition:background-color 0.2s ease;}
   .stack-suggestion-item:hover{background-color:var(--bg1);}
-  .stack-suggestion-item:not(:last-child){border-bottom:1px solid rgba(11,17,32,0.06);}
+  .stack-suggestion-item:not(:last-child){border-bottom:1px solid rgba(255,255,255,0.06);}
 
   /* ── AUTOCOMPLETE ── */
-  #autocomplete-suggestions{position:absolute;background:var(--card);border:1px solid rgba(11,17,32,0.08);border-radius:10px;box-shadow:var(--shadow);z-index:100;margin-top:4px;max-height:150px;overflow-y:auto;width:100%;box-sizing:border-box;}
+  #autocomplete-suggestions{position:absolute;background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:10px;box-shadow:var(--shadow);z-index:100;margin-top:4px;max-height:150px;overflow-y:auto;width:100%;box-sizing:border-box;}
   .suggestion-item{padding:10px 14px;font-size:0.9rem;cursor:pointer;transition:background-color 0.2s ease;}
   .suggestion-item:hover{background-color:var(--bg1);}
-  .suggestion-item:not(:last-child){border-bottom:1px solid rgba(11,17,32,0.06);}
+  .suggestion-item:not(:last-child){border-bottom:1px solid rgba(255,255,255,0.06);}
 
   /* ── FLOATING NAV ── */
   #page-nav-controls{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;display:none;align-items:center;gap:10px;background:var(--glass);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:8px;border-radius:16px;box-shadow:0 8px 25px rgba(18,38,63,0.12);border:1px solid rgba(255,255,255,0.5);}
   #page-nav-controls.show{display:flex;animation:fadeIn 0.3s ease-out;}
-  .nav-btn{width:44px;height:44px;border-radius:50%;font-size:1.6rem;line-height:44px;text-align:center;padding:0;background:linear-gradient(180deg,#fff,#f5f7ff);border:0;box-shadow:0 2px 8px rgba(18,38,63,0.08);cursor:pointer;color:#0f1724;transition:transform 0.18s ease;}
+  .nav-btn{width:44px;height:44px;border-radius:50%;font-size:1.6rem;line-height:44px;text-align:center;padding:0;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);box-shadow:none;cursor:pointer;color:#e2e8f8;transition:transform 0.18s ease;}
   .nav-btn:hover{transform:translateY(-2px);}
 
   /* ── BRAND RAIL ── */
@@ -230,43 +273,68 @@
   .br-highlight{background:linear-gradient(45deg,#f97316,#ef4444);-webkit-background-clip:text;background-clip:text;color:transparent;transition:text-shadow 0.3s ease-in-out;}
   .br-highlight.ignite{animation:flame-flicker 1.5s infinite linear;}
 
+  /* ── CART CHARACTER ANIMATIONS ── */
+  .cart-char{position:fixed;z-index:99999;pointer-events:none;font-size:2rem;line-height:1;will-change:transform,opacity;animation:cart-char-go 1s ease-out forwards;}
+  @keyframes cart-char-go{0%{opacity:0;transform:scale(0.4) translateY(0);}12%{opacity:1;transform:scale(1.3) translateY(0);}100%{opacity:0;transform:scale(0.7) translateX(var(--tx)) translateY(var(--ty)) rotate(var(--tr));}}
+
   /* ── NEAR ME MODAL ── */
-  #near-me-modal-overlay{position:fixed;inset:0;background-color:rgba(11,18,32,0.6);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+  #near-me-modal-overlay{position:fixed;inset:0;background-color:rgba(11,18,32,0.6);z-index:9998;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
   #near-me-modal-overlay.hidden{opacity:0;pointer-events:none;}
   #near-me-modal-overlay:not(.hidden){opacity:1;pointer-events:auto;}
-  #near-me-modal-card{max-width:620px;padding:28px;transition:transform 0.3s ease;display:flex;flex-direction:column;max-height:85vh;position:relative;}
+  #near-me-modal-card{width:100%;max-width:620px;padding:20px 20px 32px;background:var(--card);border:1px solid rgba(255,255,255,0.07);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;max-height:72vh;position:relative;border-radius:20px 20px 0 0;transform:translateY(20px);}
+  #near-me-modal-overlay:not(.hidden) #near-me-modal-card{transform:translateY(0);}
   #near-me-modal-close{position:absolute;top:10px;right:14px;font-size:2rem;font-weight:300;background:none;border:none;cursor:pointer;color:var(--muted);}
   #near-me-list{gap:12px;overflow-y:auto;padding-right:8px;}
-  .near-me-result-item{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:16px;background:linear-gradient(180deg,#fdfdff,#f7faff);border:1px solid rgba(11,18,32,0.05);border-radius:12px;padding:16px;cursor:pointer;transition:transform 0.2s ease,box-shadow 0.2s ease;}
+  .near-me-result-item{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;cursor:pointer;transition:transform 0.2s ease,box-shadow 0.2s ease;}
   .near-me-result-item:hover{transform:translateY(-4px);box-shadow:0 8px 25px rgba(18,38,63,0.1);border-color:rgba(79,70,229,0.2);}
   .result-rank{font-size:1.5rem;font-weight:600;color:var(--muted);}
   .result-details{display:flex;flex-direction:column;gap:4px;}
-  .result-main-info .food-name{font-weight:700;font-size:1.05rem;color:#0b1220;}
+  .result-main-info .food-name{font-weight:700;font-size:1.05rem;color:#e2e8f8;}
   .result-main-info .restaurant-name{font-size:0.9rem;color:var(--muted);margin-left:8px;}
   .result-value{font-weight:600;font-size:0.95rem;color:var(--accent);}
   .result-stats{display:flex;flex-direction:column;gap:6px;text-align:right;font-size:0.85rem;color:var(--muted);white-space:nowrap;}
-  .add-to-stack-btn{background:linear-gradient(90deg,#4338ca,#0ea5e9);color:white;border:none;border-radius:8px;padding:7px 12px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;transition:opacity 0.15s ease,transform 0.15s ease;}
+  .add-to-stack-btn{background:linear-gradient(90deg,#00c2ff,#0ea5e9);color:white;border:none;border-radius:8px;padding:7px 12px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;transition:opacity 0.15s ease,transform 0.15s ease;}
   .add-to-stack-btn:hover{opacity:0.88;transform:translateY(-1px);}
 
   /* ── GROCERY CART ── */
-  #grocery-cart-btn{position:fixed;bottom:200px;right:16px;width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#f97316);box-shadow:0 8px 28px rgba(245,158,11,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2.5rem;cursor:pointer;z-index:10100;border:3px solid rgba(255,255,255,0.35);transition:transform 0.2s ease,box-shadow 0.2s ease;gap:0;}
-  #grocery-cart-btn::after{content:'CHECKOUT';font-size:0.42rem;font-weight:800;letter-spacing:0.06em;color:rgba(255,255,255,0.9);font-family:var(--font-body);display:block;line-height:1;margin-top:1px;}
-  #grocery-cart-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(245,158,11,0.65);}
-  #grocery-cart-btn.cart-has-items{animation:gold-pulse 2s ease-in-out infinite;}
-  #grocery-cart-btn.cart-glow{animation:gold-pulse 2s ease-in-out infinite;}
-  @keyframes gold-pulse{
-    0%,100%{box-shadow:0 8px 28px rgba(245,158,11,0.5),0 0 0 0 rgba(245,158,11,0.35);}
-    50%{box-shadow:0 8px 28px rgba(245,158,11,0.5),0 0 0 12px rgba(245,158,11,0);}
+  #grocery-cart-btn{position:fixed;bottom:200px;right:16px;width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#0d1a2e,#111827);box-shadow:0 8px 28px rgba(0,194,255,0.2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2.2rem;cursor:pointer;z-index:10100;border:2px solid rgba(0,194,255,0.3);transition:transform 0.2s ease,box-shadow 0.2s ease;gap:0;}
+  #grocery-cart-btn::before{
+    content:'MOST VALUE PROTEIN🔥';
+    font-size:0.52rem;font-weight:900;letter-spacing:0.04em;
+    font-family:var(--font-body);display:block;line-height:1;margin-bottom:3px;
+    white-space:nowrap;
+    background:linear-gradient(90deg,#00c2ff,#ffffff,#f97316,#ef4444);
+    background-size:300% 100%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:cart-label-shimmer 2s linear infinite;
   }
-  #grocery-cart-count{position:absolute;top:-4px;right:-4px;background:#ef4444;color:white;font-size:0.7rem;font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;}
+  #grocery-cart-btn::after{
+    content:'SAVE $$$$$';
+    font-size:0.65rem;font-weight:900;letter-spacing:0.12em;
+    font-family:var(--font-body);display:block;line-height:1;margin-top:4px;
+    background:linear-gradient(90deg,#00ff88,#ffd700,#ffec00,#00ff88,#ffd700,#39ff14,#ffd700);
+    background-size:400% 100%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:cart-label-shimmer 1.5s linear infinite;
+    filter:drop-shadow(0 0 6px rgba(255,215,0,0.8)) drop-shadow(0 0 12px rgba(57,255,20,0.6));
+  }
+  @keyframes cart-label-shimmer{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
+  #grocery-cart-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,194,255,0.4);}
+  #grocery-cart-btn.cart-has-items{animation:cyan-pulse 2s ease-in-out infinite;}
+  #grocery-cart-btn.cart-glow{animation:cyan-pulse 2s ease-in-out infinite;}
+  @keyframes cyan-pulse{
+    0%,100%{box-shadow:0 8px 28px rgba(0,194,255,0.25),0 0 0 0 rgba(0,194,255,0.3);}
+    50%{box-shadow:0 8px 28px rgba(0,194,255,0.35),0 0 0 14px rgba(0,194,255,0);}
+  }
+  #grocery-cart-count{position:absolute;top:-4px;right:-4px;background:linear-gradient(45deg,#f97316,#ef4444);color:white;font-size:0.7rem;font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #080c14;}
 
   /* Floating cart panel */
   #cart-float-panel{
     position:fixed;bottom:296px;right:12px;
-    background:linear-gradient(135deg,#0f172a,#1e1b4b);
-    color:white;border-radius:16px;padding:12px 14px;
+    background:linear-gradient(135deg,#0d1424,#111827);
+    color:#e2e8f8;border-radius:16px;padding:12px 14px;
     width:200px;z-index:10099;
-    box-shadow:0 8px 32px rgba(11,18,32,0.35);
+    box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.06);
     flex-direction:column;gap:10px;
     pointer-events:none;
     opacity:0;transform:translateY(8px);
@@ -274,20 +342,21 @@
     display:flex;
   }
   #cart-float-panel.visible{pointer-events:auto;opacity:1;transform:translateY(0);}
-  #cart-float-items{font-size:0.78rem;color:rgba(255,255,255,0.75);line-height:1.7;max-height:120px;overflow-y:auto;}
+  #cart-float-items{font-size:0.78rem;color:rgba(180,196,230,0.75);line-height:1.7;max-height:120px;overflow-y:auto;}
   #cart-float-btn{background:linear-gradient(90deg,#f97316,#ef4444);color:white;border:none;border-radius:10px;padding:10px;font-size:0.88rem;font-weight:800;cursor:pointer;font-family:var(--font-body);width:100%;transition:opacity 0.15s ease;}
   #cart-float-btn:hover{opacity:0.88;}
 
+  #cart-checkout-hint{font-size:0.5rem;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:0.04em;margin-top:2px;display:block;}
+
   /* Trash button — directly below cart button */
-  #cart-trash-btn{position:fixed;bottom:126px;right:12px;width:120px;height:52px;border-radius:14px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);display:none;align-items:center;justify-content:center;gap:6px;font-size:1rem;cursor:pointer;z-index:10100;transition:background 0.15s ease,transform 0.15s ease;color:#dc2626;font-weight:700;font-size:0.75rem;font-family:var(--font-body);}
-  #cart-trash-btn:hover{background:rgba(239,68,68,0.25);transform:scale(1.15);}
+  #cart-trash-btn{position:fixed;bottom:126px;right:12px;width:120px;height:52px;border-radius:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);display:none;align-items:center;justify-content:center;gap:6px;font-size:1rem;cursor:pointer;z-index:10100;transition:background 0.15s ease,transform 0.15s ease;color:#ef4444;font-weight:700;font-size:0.75rem;font-family:var(--font-body);}
+  #cart-trash-btn:hover{background:rgba(239,68,68,0.2);transform:scale(1.05);}
   #cart-trash-btn.visible{display:flex;}
   @keyframes cart-glow-pulse{
-    0%{box-shadow:0 0 0 3px rgba(16,185,129,0.25),0 8px 24px rgba(18,38,63,0.18);}
-    40%{box-shadow:0 0 0 12px rgba(16,185,129,0.45),0 8px 24px rgba(18,38,63,0.18);}
-    100%{box-shadow:0 0 0 3px rgba(16,185,129,0.25),0 8px 24px rgba(18,38,63,0.18);}
+    0%{box-shadow:0 0 0 3px rgba(0,194,255,0.25),0 8px 28px rgba(0,194,255,0.2);}
+    40%{box-shadow:0 0 0 14px rgba(0,194,255,0.4),0 8px 28px rgba(0,194,255,0.3);}
+    100%{box-shadow:0 0 0 3px rgba(0,194,255,0.25),0 8px 28px rgba(0,194,255,0.2);}
   }
-  #grocery-cart-count{position:absolute;top:-4px;right:-4px;background:linear-gradient(45deg,#f97316,#ef4444);color:white;font-size:0.7rem;font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white;}
 
   /* Near-me modal cart counter */
   #near-me-cart-bar{display:none;background:linear-gradient(90deg,#059669,#10b981);color:white;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-weight:700;font-size:0.9rem;cursor:pointer;text-align:center;transition:opacity 0.2s ease;}
@@ -299,9 +368,9 @@
   .near-me-more-items{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(11,17,32,0.07);}
   .near-me-more-items.open{display:block;}
   .near-me-more-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;font-size:0.8rem;gap:8px;}
-  .near-me-more-row .more-name{color:#0b1220;font-weight:600;flex:1;}
+  .near-me-more-row .more-name{color:#e2e8f8;font-weight:600;flex:1;}
   .near-me-more-row .more-ppd{color:var(--muted);white-space:nowrap;}
-  .near-me-more-row .more-cart{background:linear-gradient(90deg,#4338ca,#0ea5e9);color:white;border:none;font-size:0.72rem;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:6px;font-family:var(--font-body);white-space:nowrap;transition:opacity 0.15s ease;}
+  .near-me-more-row .more-cart{background:linear-gradient(90deg,#00c2ff,#0ea5e9);color:white;border:none;font-size:0.72rem;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:6px;font-family:var(--font-body);white-space:nowrap;transition:opacity 0.15s ease;}
   .near-me-more-row .more-cart:hover{opacity:0.88;}
   #grocery-cart-overlay{position:fixed;inset:0;background:rgba(11,18,32,0.5);z-index:10002;display:none;align-items:flex-end;justify-content:center;opacity:0;transition:opacity 0.3s ease;}
   #grocery-cart-overlay.open{opacity:1;}
@@ -311,8 +380,8 @@
   #grocery-cart-close{font-size:1.8rem;background:none;border:none;cursor:pointer;color:var(--muted);line-height:1;}
   #grocery-cart-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;padding:12px;background:var(--bg1);border-radius:12px;}
   .cart-stat{display:flex;flex-direction:column;gap:2px;font-size:0.85rem;color:var(--muted);}
-  .cart-stat strong{font-size:1rem;color:#0b1220;font-weight:700;}
-  .cart-item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-radius:8px;border-bottom:1px solid rgba(11,17,32,0.06);gap:8px;}
+  .cart-stat strong{font-size:1rem;color:#e2e8f8;font-weight:700;}
+  .cart-item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-radius:8px;border-bottom:1px solid rgba(255,255,255,0.06);gap:8px;}
   .cart-item-name{font-weight:600;font-size:0.9rem;}
   .cart-item-meta{font-size:0.75rem;color:var(--muted);}
   .cart-item-remove{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted);padding:4px;flex-shrink:0;transition:color 0.15s ease;}
@@ -322,10 +391,10 @@
   /* Store preference overlay */
   #store-pref-overlay{position:fixed;inset:0;background:rgba(11,18,32,0.6);z-index:15000;display:flex;align-items:center;justify-content:center;padding:20px;}
   #store-pref-card{max-width:360px;width:100%;}
-  .store-pref-btn{display:flex;align-items:center;gap:14px;width:100%;padding:14px;border-radius:12px;border:1px solid rgba(11,17,32,0.08);background:linear-gradient(180deg,#fdfdff,#f7faff);cursor:pointer;font-family:var(--font-body);margin-bottom:10px;transition:transform 0.15s ease,box-shadow 0.15s ease;}
+  .store-pref-btn{display:flex;align-items:center;gap:14px;width:100%;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.05);cursor:pointer;font-family:var(--font-body);margin-bottom:10px;transition:transform 0.15s ease,box-shadow 0.15s ease;}
   .store-pref-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
   .store-pref-icon{font-size:1.6rem;}
-  .store-pref-name{font-weight:700;font-size:1rem;color:#0b1220;}
+  .store-pref-name{font-weight:700;font-size:1rem;color:#e2e8f8;}
   .store-pref-sub{font-size:0.8rem;color:var(--muted);}
 
   /* Smart checkout drawer */
@@ -333,14 +402,14 @@
   #smart-checkout-overlay.is-open{opacity:1;pointer-events:auto;}
   #smart-checkout-drawer{background:var(--card);width:100%;max-width:560px;max-height:92vh;display:flex;flex-direction:column;border-top-left-radius:24px;border-top-right-radius:24px;box-shadow:0 -12px 48px rgba(18,38,63,0.2);padding:24px;padding-bottom:calc(24px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;}
   #smart-checkout-overlay.is-open #smart-checkout-drawer{transform:translateY(0);}
-  #smart-checkout-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid rgba(11,17,32,0.08);margin-bottom:16px;}
+  #smart-checkout-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:16px;}
   #smart-checkout-header h3{margin:0!important;}
   #smart-checkout-close{width:36px;height:36px;border-radius:50%;border:none;background:var(--bg1);font-size:1.5rem;cursor:pointer;}
 
   /* Checkout group inside drawer */
   .smart-group{margin-bottom:20px;}
   .smart-group-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px;}
-  .smart-group-items{background:var(--bg1);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:0.88rem;line-height:1.9;color:#0b1220;}
+  .smart-group-items{background:var(--bg1);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:0.88rem;line-height:1.9;color:#e2e8f8;}
   .smart-group-btn-row{display:flex;gap:8px;flex-wrap:wrap;}
   .smart-store-btn{
     flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
@@ -361,17 +430,17 @@
   /* ── DEALS SHELF ── */
   #deals-shelf{padding:0;background:none;box-shadow:none;border:none;margin-bottom:4px;}
   #deals-shelf-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;padding:0 2px;}
-  #deals-shelf-title{font-size:0.82rem;font-weight:700;color:#0b1220;}
+  #deals-shelf-title{font-size:0.82rem;font-weight:700;color:#e2e8f8;}
   #deals-shelf-sub{font-size:0.7rem;color:var(--muted);}
   #deals-shelf-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;cursor:grab;}
   #deals-shelf-scroll:active{cursor:grabbing;}
   #deals-shelf-scroll::-webkit-scrollbar{display:none;}
-  .shelf-card{flex-shrink:0;scroll-snap-align:start;width:88px;background:white;border-radius:12px;border:1px solid rgba(11,18,32,0.07);padding:10px 8px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:transform 0.15s ease,box-shadow 0.15s ease;user-select:none;}
+  .shelf-card{flex-shrink:0;scroll-snap-align:start;width:88px;background:rgba(255,255,255,0.05);border-radius:12px;border:1px solid rgba(255,255,255,0.08);padding:10px 8px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:transform 0.15s ease,box-shadow 0.15s ease;user-select:none;}
   .shelf-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(11,18,32,0.1);}
   .shelf-card:active{transform:scale(0.95);}
   .shelf-card.added{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#10b981;}
   .shelf-emoji{font-size:1.6rem;line-height:1;}
-  .shelf-name{font-size:0.65rem;font-weight:700;color:#0b1220;text-align:center;line-height:1.2;}
+  .shelf-name{font-size:0.65rem;font-weight:700;color:#e2e8f8;text-align:center;line-height:1.2;}
   .shelf-ppd{font-size:0.6rem;color:var(--accent);font-weight:600;}
   .shelf-price{font-size:0.6rem;color:var(--muted);}
   .shelf-add{font-size:1rem;margin-top:2px;background:none;border:none;cursor:pointer;padding:2px;font-family:var(--font-body);}
@@ -387,8 +456,8 @@
   .share-card-btns button,.share-card-btns a{flex:1;padding:12px;font-size:0.95rem;font-weight:700;text-align:center;text-decoration:none;border-radius:10px;cursor:pointer;font-family:var(--font-body);}
 
   /* ── HASHTAGS ── */
-  .hashtag{display:inline-block;margin-left:6px;padding:3px 8px;background-color:var(--bg1);border-radius:6px;cursor:pointer;transition:background-color 0.2s ease;font-size:0.8rem;color:var(--muted);border:1px solid rgba(11,17,32,0.06);}
-  .hashtag:hover{background-color:#e8f1f3;color:var(--accent);}
+  .hashtag{display:inline-block;margin-left:6px;padding:3px 8px;background-color:var(--bg1);border-radius:6px;cursor:pointer;transition:background-color 0.2s ease;font-size:0.8rem;color:var(--muted);border:1px solid rgba(255,255,255,0.06);}
+  .hashtag:hover{background-color:rgba(0,194,255,0.1);color:var(--accent);}
 
   /* ── PARTICLES ── */
   .particle{position:absolute;left:50%;top:40%;opacity:0;animation:burst 2.5s cubic-bezier(0.1,0.8,0.2,1) forwards;}
@@ -409,7 +478,7 @@
   /* ── FAVORITES ── */
   .qcard-fav-btn{background:none;border:none;font-size:1rem;cursor:pointer;padding:2px 4px;border-radius:6px;transition:transform 0.15s ease;flex-shrink:0;}
   .qcard-fav-btn:hover{transform:scale(1.2);}
-  .fav-item{display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-radius:8px;border-bottom:1px solid rgba(11,17,32,0.06);cursor:pointer;transition:background 0.15s ease;}
+  .fav-item{display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-radius:8px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:background 0.15s ease;}
   .fav-item:hover{background:rgba(67,56,202,0.04);}
   .fav-item:last-child{border-bottom:none;}
   .fav-item-name{font-weight:600;font-size:0.9rem;}
@@ -421,7 +490,7 @@
   /* ── CART BUTTONS ON ITEMS ── */
   .qcard-cart-btn{background:none;border:none;font-size:1.1rem;cursor:pointer;padding:2px 4px;border-radius:6px;transition:transform 0.15s ease;flex-shrink:0;}
   .qcard-cart-btn:hover{transform:scale(1.2);}
-  .list-cart-btn{background:linear-gradient(90deg,#4338ca,#0ea5e9);color:white;border:none;font-size:0.72rem;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:6px;margin-left:8px;flex-shrink:0;transition:transform 0.15s ease,opacity 0.15s ease;font-family:var(--font-body);}
+  .list-cart-btn{background:linear-gradient(90deg,#00c2ff,#0ea5e9);color:white;border:none;font-size:0.72rem;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:6px;margin-left:8px;flex-shrink:0;transition:transform 0.15s ease,opacity 0.15s ease;font-family:var(--font-body);}
   .list-cart-btn:hover{transform:scale(1.05);opacity:0.9;}
 
   /* ── PROTEIN GOAL TRACKER ── */
@@ -468,7 +537,7 @@
   .toast.fire{background:linear-gradient(90deg,#f97316,#ef4444);}
 
   /* ── FOOD OF THE DAY ── */
-  #fotd-section{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:white;border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;}
+  #fotd-section{background:linear-gradient(135deg,#0d1424,#0a1628);border:1px solid rgba(0,194,255,0.12);color:#e2e8f8;border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;}
   #fotd-section::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(249,115,22,0.3),transparent 70%);pointer-events:none;}
   #fotd-section h3{color:white;margin:0 0 4px 0!important;}
   #fotd-section p{color:rgba(255,255,255,0.6);font-size:0.85rem;margin:0 0 14px 0;}
@@ -485,7 +554,7 @@
   /* ── CALC RESULT EXTRAS ── */
   #calc-macro-row{display:none;gap:8px;width:100%;margin-top:4px;}
   .calc-macro-chip{flex:1;background:var(--bg1);border-radius:8px;padding:7px 6px;text-align:center;font-size:0.78rem;}
-  .calc-macro-chip strong{display:block;font-size:1rem;font-weight:800;color:#0b1220;}
+  .calc-macro-chip strong{display:block;font-size:1rem;font-weight:800;color:#e2e8f8;}
   .calc-macro-chip span{color:var(--muted);}
 
   /* ── FAQ SECTION ── */
@@ -502,22 +571,49 @@
 
   /* ── MOBILE ── */
   /* ── REWARD BANNER ── */
-  #reward-banner{position:fixed;top:0;left:0;right:0;z-index:50000;background:rgba(15,23,42,0.96);backdrop-filter:blur(8px);color:white;padding:6px 16px;text-align:center;font-size:0.75rem;}
-  #reward-banner-inner{display:flex;align-items:center;justify-content:center;gap:12px;max-width:1200px;margin:0 auto;}
-  #reward-banner-progress{background:rgba(251,191,36,0.2);border:1px solid rgba(251,191,36,0.4);border-radius:99px;padding:2px 10px;font-weight:800;font-size:0.75rem;color:#fbbf24;white-space:nowrap;}
+  #reward-banner{position:fixed;top:0;left:0;right:0;z-index:50000;background:linear-gradient(135deg,#080c14,#0d1424);border-bottom:1px solid rgba(0,194,255,0.15);backdrop-filter:blur(8px);color:white;padding:11px 16px 7px;}
+  #reward-banner-inner{max-width:900px;margin:0 auto;}
+  #reward-banner-tiers{display:flex;align-items:center;gap:8px;}
+  .reward-tier-pill{display:flex;align-items:center;gap:7px;flex:1;min-width:0;}
+  .tier-icon{font-size:1.3rem;flex-shrink:0;}
+  .tier-info{display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
+  .tier-name{font-size:0.7rem;font-weight:900;letter-spacing:0.1em;color:#e2e8f8;}
+  .tier-req{font-size:0.62rem;color:var(--muted);}
+  .tier-progress-wrap{display:flex;align-items:center;gap:5px;flex:1;min-width:0;}
+  .tier-bar{flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
+  .tier-bar-fill{height:100%;background:linear-gradient(90deg,#f97316,#ef4444);border-radius:99px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);}
+  .tier-bar-fill.grand{background:linear-gradient(90deg,#ffd700,#00c2ff);}
+  .tier-count{font-size:0.72rem;font-weight:800;color:#e2e8f8;white-space:nowrap;}
+  .reward-tier-divider{color:rgba(255,255,255,0.15);font-size:1rem;flex-shrink:0;padding:0 2px;}
+  #reward-banner-tagline{font-size:0.65rem;font-weight:800;text-align:center;margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;
+    background:linear-gradient(90deg,#00c2ff,#ffffff,#ffd700,#ffffff,#00c2ff);
+    background-size:300% 100%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:cart-label-shimmer 3s linear infinite;
+    filter:drop-shadow(0 0 6px rgba(255,215,0,0.4));
+  }
 
   /* ── SCRATCH CARD ── */
-  #scratch-container{position:relative;width:280px;height:100px;margin:16px auto;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(11,18,32,0.2);}
-  #scratch-prize{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;font-family:var(--font-display);letter-spacing:0.05em;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:white;text-shadow:0 2px 8px rgba(0,0,0,0.3);}
+  #scratch-container{position:relative;width:280px;height:100px;margin:0 auto 8px;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.5);}
+  #scratch-prize{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;font-family:var(--font-display);letter-spacing:0.05em;color:white;text-shadow:0 2px 8px rgba(0,0,0,0.4);}
   #scratch-canvas{position:absolute;inset:0;cursor:crosshair;border-radius:12px;}
-  #scratch-hint{text-align:center;font-size:0.8rem;color:var(--muted);margin:4px 0 0;}
+  #scratch-hint{text-align:center;font-size:0.78rem;color:var(--muted);margin:4px 0 8px;}
 
-  /* ── CHECKOUT COUNTER ── */
-  #reward-modal-overlay{position:fixed;inset:0;background:rgba(11,18,32,0.75);z-index:40000;display:none;align-items:center;justify-content:center;padding:20px;}
+  /* ── REWARD MODAL ── */
+  #reward-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:40000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px);}
   #reward-modal-overlay.open{display:flex;}
-  #reward-modal{background:white;border-radius:24px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(11,18,32,0.3);}
-  #reward-modal h2{margin:0 0 8px;font-family:var(--font-display);font-size:1.8rem;letter-spacing:0.02em;}
-  #reward-modal p{color:var(--muted);font-size:0.88rem;margin:0 0 8px;line-height:1.5;}
+  #reward-modal{background:linear-gradient(135deg,#0d1424,#111827);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:28px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.7);}
+  #reward-modal-header{margin-bottom:14px;}
+  #reward-modal-tier-badge{display:inline-block;font-size:0.62rem;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:10px;}
+  #reward-modal-emoji{font-size:3rem;margin-bottom:6px;}
+  #reward-modal h2{margin:0 0 4px;font-family:var(--font-display);font-size:1.5rem;letter-spacing:0.02em;color:#e2e8f8;}
+  #reward-modal-subtitle{font-size:0.75rem;color:var(--muted);margin:0 0 14px;}
+  #reward-modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 16px;padding:12px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.06);}
+  .reward-stat{display:flex;flex-direction:column;gap:3px;}
+  .reward-stat-label{font-size:0.52rem;font-weight:800;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;}
+  .reward-stat-value{font-size:0.85rem;font-weight:800;color:#e2e8f8;}
+  #scratch-claim-inner{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px;margin:8px 0;}
+  #scratch-won-amount{font-size:2rem;font-weight:900;font-family:var(--font-display);background:linear-gradient(90deg,#ffd700,#00c2ff,#ffd700);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cart-label-shimmer 2s linear infinite;}
     body{padding:16px;padding-left:60px;}
     h1{font-size:2rem;}
     .main-layout{grid-template-columns:1fr;}
@@ -557,8 +653,32 @@
   <!-- Sticky Reward Banner -->
   <div id="reward-banner">
     <div id="reward-banner-inner">
-      <span id="reward-banner-text">🏆 Checkout 10x ($50+ each) this month → scratch to win <strong>$10–$500 off</strong></span>
-      <span id="reward-banner-progress">0/10</span>
+      <div id="reward-banner-tiers">
+        <div class="reward-tier-pill" id="big-prize-pill">
+          <span class="tier-icon">🎟️</span>
+          <div class="tier-info">
+            <span class="tier-name">BIG PRIZE · win $0.50–$50</span>
+            <span class="tier-req">4 checkouts of $75+</span>
+          </div>
+          <div class="tier-progress-wrap">
+            <div class="tier-bar"><div class="tier-bar-fill" id="big-prize-bar" style="width:0%"></div></div>
+            <span class="tier-count" id="big-prize-count">0/4</span>
+          </div>
+        </div>
+        <div class="reward-tier-divider">|</div>
+        <div class="reward-tier-pill" id="grand-prize-pill">
+          <span class="tier-icon">🏆</span>
+          <div class="tier-info">
+            <span class="tier-name">GRAND PRIZE · win $2.50–$500</span>
+            <span class="tier-req">6 checkouts of $150+</span>
+          </div>
+          <div class="tier-progress-wrap">
+            <div class="tier-bar"><div class="tier-bar-fill grand" id="grand-prize-bar" style="width:0%"></div></div>
+            <span class="tier-count" id="grand-prize-count">0/6</span>
+          </div>
+        </div>
+      </div>
+      <div id="reward-banner-tagline">💎 You're Going To Eat Anyway. Get Rewarded. 💎</div>
     </div>
   </div>
 
@@ -569,13 +689,16 @@
     <header>
       <div class="title-block">
         <h1>Find the <span class="h1-highlight">Cheapest Protein</span> Near You</h1>
-        <p class="subtitle">Best high-protein meals and groceries ranked by protein per dollar — at restaurants and stores near you right now.</p>
-        <p class="prices-note">⏱ Prices approximate — updated April 2025. Tap any food to calculate exact value.</p>
+        <p class="subtitle">Ranked by protein per dollar. Near you, right now.</p>
+        <p class="prices-note">Prices approximate — updated May 2026</p>
       </div>
       <div class="hero-cta">
         <button id="fixed-near-me-cta">
           <span class="near-me-btn-label">📍 Find Best Protein Near Me</span>
           <span class="near-me-btn-mvp"><i class="fire">🔥</i> MVP — MostValueProtein.com <i class="fire">🔥</i></span>
+        </button>
+        <button id="grocery-near-me-cta" onclick="openGroceryNearMe()">
+          🏪 Shop Grocery Near Me
         </button>
         <p id="social-proof-line" style="text-align:center;font-size:0.78rem;color:var(--muted);margin:8px 0 0 0;"></p>
         <div class="hero-secondary">
@@ -591,13 +714,9 @@
     <main class="main-layout">
       <div class="content-column">
 
-        <div class="centered-instruction">
-          <p style="margin:0;">👀 Tap any food to test it — then checkout with your preferred store 👀</p>
-        </div>
-
         <!-- Food of the Day -->
         <section id="fotd-section">
-          <h3>🔥 Food of the Day</h3>
+          <h3>🔥 Pick of the Day</h3>
           <p>Today's best protein-per-dollar pick — share it</p>
           <div class="fotd-item" id="fotd-item">
             <div class="fotd-emoji" id="fotd-emoji">🐟</div>
@@ -608,9 +727,9 @@
             </div>
           </div>
           <div class="fotd-actions">
-            <button class="primary" id="fotd-calc-btn">Test It →</button>
-            <button class="btn" id="fotd-share-btn">📤 Share Pick</button>
-            <button class="btn" id="fotd-cart-btn">🛒 Add to Cart</button>
+            <button class="primary" id="fotd-calc-btn">🛒 Add to Cart</button>
+            <button class="btn" id="fotd-share-btn">📤 Share</button>
+            <button class="btn" id="fotd-cart-btn">🛒 Add</button>
           </div>
         </section>
 
@@ -668,26 +787,26 @@
 
         <!-- My Favorites -->
         <section id="favorites-section" class="card" style="display:none;">
-          <h3 style="margin:0 0 12px 0;">⭐ My Favorites</h3>
+          <h3 style="margin:0 0 12px 0;">My Favorites</h3>
           <div id="favorites-list" class="list"></div>
         </section>
 
         <!-- Quick Examples — compact shelf -->
         <section id="quick-examples-section" style="padding:0;background:none;box-shadow:none;border:none;margin-bottom:4px;">
           <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;padding:0 2px;">
-            <span style="font-size:0.82rem;font-weight:700;color:#0b1220;">⚡ Quick Examples</span>
+            <span style="font-size:0.82rem;font-weight:700;color:#e2e8f8;">⚡ Quick Examples</span>
             <span style="font-size:0.7rem;color:var(--muted);">Tap to calculate</span>
           </div>
           <div class="quick" id="quick-list" style="display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;cursor:default;">
-            <div class="qcard" data-name="Chicken Breast" data-calories="165" data-store="instacart" data-query="chicken breast" data-price="6.99" data-protein="100" style="min-width:80px;flex:0 0 80px;scroll-snap-align:start;padding:6px 7px;">
+            <div class="qcard" data-name="Chicken Breast" data-calories="165" data-store="instacart" data-query="chicken breast" data-price="4.17" data-protein="100" style="min-width:80px;flex:0 0 80px;scroll-snap-align:start;padding:6px 7px;">
               <div class="meta"><div class="food" style="font-size:0.68rem;">Chicken</div><div class="small">14.3g/$1</div></div>
               <button class="qcard-cart-btn" onclick="event.stopPropagation();addToCartFromCard(this.closest('.qcard'))" title="Add to cart" style="font-size:0.9rem;">🛒</button>
             </div>
-            <div class="qcard" data-name="Eggs" data-calories="840" data-store="instacart" data-query="eggs" data-price="2.00" data-protein="48" style="min-width:80px;flex:0 0 80px;scroll-snap-align:start;padding:6px 7px;">
+            <div class="qcard" data-name="Eggs" data-calories="840" data-store="instacart" data-query="eggs" data-price="4.99" data-protein="48" style="min-width:80px;flex:0 0 80px;scroll-snap-align:start;padding:6px 7px;">
               <div class="meta"><div class="food" style="font-size:0.68rem;">Eggs</div><div class="small">24g/$1</div></div>
               <button class="qcard-cart-btn" onclick="event.stopPropagation();addToCartFromCard(this.closest('.qcard'))" title="Add to cart" style="font-size:0.9rem;">🛒</button>
             </div>
-            <div class="qcard" data-name="Greek Yogurt" data-calories="100" data-store="instacart" data-query="greek yogurt" data-price="1.50" data-protein="18" style="min-width:80px;flex:0 0 80px;scroll-snap-align:start;padding:6px 7px;">
+            <div class="qcard" data-name="Greek Yogurt" data-calories="100" data-store="instacart" data-query="greek yogurt" data-price="1.75" data-protein="18" style="min-width:80px;flex:0 0 80px;scroll-snap-align:start;padding:6px 7px;">
               <div class="meta"><div class="food" style="font-size:0.68rem;">Gk Yogurt</div><div class="small">12g/$1</div></div>
               <button class="qcard-cart-btn" onclick="event.stopPropagation();addToCartFromCard(this.closest('.qcard'))" title="Add to cart" style="font-size:0.9rem;">🛒</button>
             </div>
@@ -716,7 +835,7 @@
 
         <!-- Protein Face-Off -->
         <section id="faceoff-section" class="card">
-          <h3 style="margin:0 0 4px 0;">Protein Face-Off ⚔️</h3>
+          <h3 style="margin:0 0 4px 0;">Protein Face-Off</h3>
           <p class="subtitle" style="margin-bottom:16px;">Compare two foods — see which gives more protein per dollar.</p>
           <div class="faceoff-container">
             <div class="faceoff-selectors">
@@ -743,25 +862,25 @@
           <a href="#grocery-full" class="btn" style="margin-left:10px;padding:8px 10px;font-size:0.95rem;vertical-align:middle">Full List</a>
           <button class="btn" onclick="shareTopList('grocery')" style="margin-left:6px;padding:8px 10px;font-size:0.95rem;vertical-align:middle">📤 Share</button>
           <div id="grocery-top-list" class="list" style="margin-top:12px">
-            <div class="list-item" style="cursor:pointer;" data-name="Eggs" data-calories="840" data-store="instacart" data-query="eggs dozen" data-price="2.00" data-protein="48">
+            <div class="list-item" style="cursor:pointer;" data-name="Eggs" data-calories="840" data-store="instacart" data-query="eggs dozen" data-price="4.99" data-protein="48">
               <div>🥇 <span>Eggs</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div>
-              <div class="muted">24 g / $1</div>
+              <div class="muted">24 g / $1<span class="item-stat">Peaked at $6.22/doz in Mar 2025 — BLS all-time high</span></div>
             </div>
-            <div class="list-item" style="cursor:pointer;" data-name="Chicken Breast" data-calories="165" data-store="instacart" data-query="chicken breast boneless" data-price="4.35" data-protein="100">
+            <div class="list-item" style="cursor:pointer;" data-name="Chicken Breast" data-calories="165" data-store="instacart" data-query="chicken breast boneless" data-price="4.17" data-protein="100">
               <div>🥈 <span>Chicken Breast</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div>
-              <div class="muted">23 g / $1</div>
+              <div class="muted">23 g / $1<span class="item-stat">Down from $4.75 peak in 2022 — now near 2-year low (FRED/BLS)</span></div>
             </div>
-            <div class="list-item" style="cursor:pointer;" data-name="Canned Tuna" data-calories="150" data-store="amazon" data-query="canned tuna bulk" data-price="1.50" data-protein="30">
+            <div class="list-item" style="cursor:pointer;" data-name="Canned Tuna" data-calories="150" data-store="amazon" data-query="canned tuna bulk" data-price="1.79" data-protein="30">
               <div>🥉 <span>Tuna</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div>
-              <div class="muted">20 g / $1</div>
+              <div class="muted">20 g / $1<span class="item-stat">One of the most price-stable proteins over the past decade (BLS CPI)</span></div>
             </div>
-            <div class="list-item" style="cursor:pointer;" data-name="Milk" data-calories="960" data-store="instacart" data-query="whole milk gallon" data-price="3.00" data-protein="48">
+            <div class="list-item" style="cursor:pointer;" data-name="Milk" data-calories="960" data-store="instacart" data-query="whole milk gallon" data-price="4.70" data-protein="48">
               <div>4. <span>Milk</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div>
-              <div class="muted">16 g / $1</div>
+              <div class="muted">16 g / $1<span class="item-stat">Was $3.56/gal in 2021 → $4.14 today — up 14% in 2022 alone (BLS)</span></div>
             </div>
-            <div class="list-item" style="cursor:pointer;" data-name="Liquid Egg Whites" data-calories="450" data-store="instacart" data-query="liquid egg whites carton" data-price="6.00" data-protein="90">
+            <div class="list-item" style="cursor:pointer;" data-name="Liquid Egg Whites" data-calories="450" data-store="instacart" data-query="liquid egg whites carton" data-price="7.49" data-protein="90">
               <div>5. <span>Liquid Egg Whites</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div>
-              <div class="muted">15 g / $1</div>
+              <div class="muted">15 g / $1<span class="item-stat">Rose with egg prices during avian flu — 70M hens culled 2024–25 (USDA)</span></div>
             </div>
           </div>
         </section>
@@ -772,11 +891,11 @@
           <a href="#restaurant-picks" class="btn" style="margin-left:10px;padding:8px 10px;font-size:0.95rem;vertical-align:middle">Full List</a>
           <button class="btn" onclick="shareTopList('restaurant')" style="margin-left:6px;padding:8px 10px;font-size:0.95rem;vertical-align:middle">📤 Share</button>
           <div id="restaurant-top-list" class="list">
-            <div class="list-item" style="cursor:pointer;" data-name="McDonald's McDouble" data-price="2.50" data-protein="22" data-calories="400" data-type="restaurant" data-source="McDonald's"><div>🥇 <span>McDonald's McDouble</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">8.8 g / $1</div></div>
-            <div class="list-item" style="cursor:pointer;" data-name="Wendy's Grilled Chicken Sandwich" data-price="4.80" data-protein="36" data-calories="350" data-type="restaurant" data-source="Wendy's"><div>🥈 <span>Wendy's Grilled Chicken Sandwich</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">7.5 g / $1</div></div>
-            <div class="list-item" style="cursor:pointer;" data-name="Chick-fil-A 12ct Nuggets" data-price="5.55" data-protein="25" data-calories="200" data-type="restaurant" data-source="Chick-fil-A"><div>🥉 <span>Chick-fil-A 12ct Nuggets</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">4.5 g / $1</div></div>
-            <div class="list-item" style="cursor:pointer;" data-name="Chipotle Chicken Bowl" data-price="7.69" data-protein="40" data-calories="650" data-type="restaurant" data-source="Chipotle"><div>4. <span>Chipotle Chicken Bowl</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">5.2 g / $1</div></div>
-            <div class="list-item" style="cursor:pointer;" data-name="Subway Rotisserie Chicken" data-price="5.80" data-protein="29" data-calories="350" data-type="restaurant" data-source="Subway"><div>5. <span>Subway Rotisserie Chicken</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">5 g / $1</div></div>
+            <div class="list-item" style="cursor:pointer;" data-name="McDonald's McDouble" data-price="3.19" data-protein="22" data-calories="400" data-type="restaurant" data-source="McDonald's"><div>🥇 <span>McDonald's McDouble</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">8.8 g / $1<span class="item-stat">Best protein/$  at any major fast food chain — part of $5 Meal Deal since Jan 2025</span></div></div>
+            <div class="list-item" style="cursor:pointer;" data-name="Wendy's Grilled Chicken Sandwich" data-price="5.49" data-protein="36" data-calories="350" data-type="restaurant" data-source="Wendy's"><div>🥈 <span>Wendy's Grilled Chicken Sandwich</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">6.6 g / $1<span class="item-stat">Up 56% since 2014 — still one of the leanest fast food options (FinanceBuzz)</span></div></div>
+            <div class="list-item" style="cursor:pointer;" data-name="Chick-fil-A 12ct Nuggets" data-price="6.29" data-protein="25" data-calories="200" data-type="restaurant" data-source="Chick-fil-A"><div>🥉 <span>Chick-fil-A 12ct Nuggets</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">4.5 g / $1<span class="item-stat">Menu prices up 57% since 2014 — still among most popular US chains (FinanceBuzz)</span></div></div>
+            <div class="list-item" style="cursor:pointer;" data-name="Chipotle Chicken Bowl" data-price="10.25" data-protein="40" data-calories="650" data-type="restaurant" data-source="Chipotle"><div>4. <span>Chipotle Chicken Bowl</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">3.9 g / $1<span class="item-stat">Was $7.09 in 2018 — up 51% in 7 years, another 1–2% hike planned 2026</span></div></div>
+            <div class="list-item" style="cursor:pointer;" data-name="Subway Rotisserie Chicken" data-price="6.49" data-protein="29" data-calories="350" data-type="restaurant" data-source="Subway"><div>5. <span>Subway Rotisserie Chicken</span><button class="list-cart-btn" onclick="event.stopPropagation();addToCartFromListItem(this.closest('.list-item'))" title="Add to cart">🛒 Add</button></div><div class="muted">4.5 g / $1<span class="item-stat">Up just 39% since 2014 — lowest price increase of any major chain (FinanceBuzz)</span></div></div>
           </div>
         </section>
 
@@ -791,7 +910,7 @@
 
         <!-- Worst Value Foods -->
         <section id="worst-value-foods" class="card">
-          <h3>Worst Protein Value Foods</h3>
+          <h3>Worst Value Foods</h3>
           <div id="worst-value-list" class="list collapsible-content"></div>
           <div class="toggle-button-container">
             <button id="toggle-worst-value" class="btn">Show Worst Values</button>
@@ -802,10 +921,10 @@
         <section id="top-picks-20" class="card">
           <h3>Top Picks for $20</h3>
           <div id="top-picks-20-list" class="list collapsible-content">
-            <div class="list-item" data-name="~4.5 lbs Chicken Breast" data-price="20.00" data-protein="450"><span>~4.5 lbs Chicken Breast</span><span class="muted">450g protein • 2,150 cal</span></div>
-            <div class="list-item" data-name="3x Little Caesars Pepperoni" data-price="20.97" data-protein="216"><span>3x Little Caesars Pepperoni</span><span class="muted">216g protein • 6,720 cal</span></div>
-            <div class="list-item" data-name="5x McDoubles + 6pc McNuggets" data-price="15.44" data-protein="125"><span>5x McDoubles + 6pc McNuggets</span><span class="muted">125g protein • 2,250 cal</span></div>
-            <div class="list-item" data-name="2x Chipotle Chicken Bowls" data-price="15.38" data-protein="80"><span>2x Chipotle Chicken Bowls</span><span class="muted">80g protein • 1,300 cal</span></div>
+            <div class="list-item" data-name="~4.5 lbs Chicken Breast" data-price="20.00" data-protein="450"><span>~4.5 lbs Chicken Breast</span><span class="muted">450g protein • 2,150 cal<span class="item-stat">Chicken breast dropped from $4.75 peak (2022) to $4.17 today — best time to bulk buy (FRED/BLS)</span></span></div>
+            <div class="list-item" data-name="3x Little Caesars Pepperoni" data-price="20.97" data-protein="216"><span>3x Little Caesars Pepperoni</span><span class="muted">216g protein • 6,720 cal<span class="item-stat">Little Caesars $5.55 Hot-N-Ready held near that price for years — one of fast food's best inflation stories</span></span></div>
+            <div class="list-item" data-name="5x McDoubles + 6pc McNuggets" data-price="15.44" data-protein="125"><span>5x McDoubles + 6pc McNuggets</span><span class="muted">125g protein • 2,250 cal<span class="item-stat">McDouble was $1 in 2014, $2.50 in 2020, $3.19 today — still highest protein/$ at McDonald's</span></span></div>
+            <div class="list-item" data-name="2x Chipotle Chicken Bowls" data-price="15.38" data-protein="80"><span>2x Chipotle Chicken Bowls</span><span class="muted">80g protein • 1,300 cal<span class="item-stat">Chipotle bowl was $6.50 in 2019 — now $10.75, up 65% in 6 years (Chipotle financial reports)</span></span></div>
           </div>
           <div class="toggle-button-container">
             <button id="toggle-top-picks" class="btn">Show Top Picks</button>
@@ -814,14 +933,14 @@
 
         <!-- Restaurant Protein Picks -->
         <section class="card" aria-labelledby="restaurant-picks">
-          <h3 id="restaurant-picks" style="margin:0;">Restaurant Protein Picks</h3>
+          <h3 id="restaurant-picks" style="margin:0;">Restaurant Rankings</h3>
           <div id="restaurants-collapsible-content" class="collapsible-content">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-top:8px;">
               <h4 style="margin:0;font-size:1rem;color:var(--muted);">All Restaurants</h4>
               <button id="toggle-all-restaurants" class="btn" style="padding:8px 12px;font-size:0.9rem;">Expand All</button>
             </div>
             <div class="restaurant-accordion">
-              <div class="item"><div class="restaurant-header"><span>McDonald's</span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
+              <div class="item"><div class="restaurant-header"><span>McDonald's<span class="item-stat">Average menu price up 40% since 2019 — McDouble still best protein/$ on menu</span></span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥇 McDouble — 8.8g per $</span><span style="font-size:0.9em;color:var(--muted);">$2.50 • 22g protein • 400 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 McChicken — 6.2g per $</span><span style="font-size:0.9em;color:var(--muted);">$2.26 • 14g protein • 400 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 6pc McNuggets — 5.1g per $</span><span style="font-size:0.9em;color:var(--muted);">$2.94 • 15g protein • 250 cal</span></div>
@@ -837,27 +956,27 @@
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 Jr. Bacon Cheeseburger — 6.0g per $</span><span style="font-size:0.9em;color:var(--muted);">$3.17 • 19g protein • 370 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 6pc Nuggets — 5.6g per $</span><span style="font-size:0.9em;color:var(--muted);">$4.29 • 24g protein • 250 cal</span></div>
               </div></div></div>
-              <div class="item"><div class="restaurant-header"><span>Taco Bell</span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
+              <div class="item"><div class="restaurant-header"><span>Taco Bell<span class="item-stat">Menu prices up 81% since 2014 — among fastest rising chains (FinanceBuzz)</span></span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥇 Power Bowl — 7.4g per $</span><span style="font-size:0.9em;color:var(--muted);">$3.51 • 26g protein • 460 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 Grilled Steak Soft Taco — 6.1g per $</span><span style="font-size:0.9em;color:var(--muted);">$1.97 • 12g protein • 200 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 Chicken Soft Taco — 5.0g per $</span><span style="font-size:0.9em;color:var(--muted);">$2.40 • 12g protein • 160 cal</span></div>
               </div></div></div>
-              <div class="item"><div class="restaurant-header"><span>KFC</span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
+              <div class="item"><div class="restaurant-header"><span>KFC<span class="item-stat">Grilled options added 2009 — roughly half the calories of original fried</span></span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥇 Grilled Chicken Breast — 7.2g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.28 • 38g protein • 210 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 Original Recipe Breast — 6.1g per $</span><span style="font-size:0.9em;color:var(--muted);">$6.39 • 39g protein • 390 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 3pc Tenders — 5.5g per $</span><span style="font-size:0.9em;color:var(--muted);">$6.55 • 36g protein • 400 cal</span></div>
               </div></div></div>
-              <div class="item"><div class="restaurant-header"><span>Panda Express</span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
+              <div class="item"><div class="restaurant-header"><span>Panda Express<span class="item-stat">Up ~35% since 2019 — still one of the best value fast-casual chains</span></span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥇 Grilled Teriyaki Chicken — 7.1g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.07 • 36g protein • 300 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 String Bean Chicken — 5.6g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.36 • 30g protein • 200 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 Broccoli Beef — 4.9g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.36 • 26g protein • 180 cal</span></div>
               </div></div></div>
-              <div class="item"><div class="restaurant-header"><span>Chipotle</span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
+              <div class="item"><div class="restaurant-header"><span>Chipotle<span class="item-stat">Was $7.09/bowl in 2018 → $10.75 today — up 51% in 7 years</span></span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥇 Double Chicken Bowl — 6.5g per $</span><span style="font-size:0.9em;color:var(--muted);">$11.45 • 74g protein • 720 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 Chicken Bowl — 5.2g per $</span><span style="font-size:0.9em;color:var(--muted);">$7.69 • 40g protein • 650 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 Steak Bowl — 4.8g per $</span><span style="font-size:0.9em;color:var(--muted);">$7.29 • 35g protein • 630 cal</span></div>
               </div></div></div>
-              <div class="item"><div class="restaurant-header"><span>Subway</span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
+              <div class="item"><div class="restaurant-header"><span>Subway<span class="item-stat">Lowest price hike of major chains — up just 39% since 2014 (FinanceBuzz)</span></span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥇 Rotisserie Chicken (6") — 6.7g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.80 • 39g protein • 350 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 Turkey Breast (6") — 5.9g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.50 • 32g protein • 280 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 Tuna (6") — 4.3g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.50 • 24g protein • 480 cal</span></div>
@@ -872,7 +991,7 @@
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 Original Chicken Sandwich — 6.0g per $</span><span style="font-size:0.9em;color:var(--muted);">$4.67 • 28g protein • 660 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 4pc Nuggets — 4.8g per $</span><span style="font-size:0.9em;color:var(--muted);">$1.67 • 8g protein • 190 cal</span></div>
               </div></div></div>
-              <div class="item"><div class="restaurant-header"><span>Popeyes</span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
+              <div class="item"><div class="restaurant-header"><span>Popeyes<span class="item-stat">Highest price increase of any major chain — up 86% since 2014 (FinanceBuzz)</span></span><span class="indicator">+</span></div><div class="restaurant-picks-content"><div class="small">
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥇 Classic Chicken Sandwich — 5.6g per $</span><span style="font-size:0.9em;color:var(--muted);">$5.00 • 28g protein • 700 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥈 5pc Blackened Tenders — 5.4g per $</span><span style="font-size:0.9em;color:var(--muted);">$7.96 • 43g protein • 280 cal</span></div>
                 <div style="display:flex;justify-content:space-between;align-items:center;"><span>🥉 3pc Tenders — 5.0g per $</span><span style="font-size:0.9em;color:var(--muted);">$6.00 • 30g protein • 340 cal</span></div>
@@ -974,7 +1093,7 @@
             </div>
 
             <!-- Regret Calculator -->
-            <div id="regret-box" style="display:none;background:linear-gradient(135deg,#fff5f5,#fff);border:1px solid rgba(239,68,68,0.15);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:0.85rem;">
+            <div id="regret-box" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:0.85rem;">
               <div style="font-weight:700;color:#dc2626;margin-bottom:4px;">💸 The Real Cost</div>
               <div id="regret-text" style="color:#374151;line-height:1.5;"></div>
               <div id="regret-best" style="margin-top:6px;font-size:0.78rem;color:var(--muted);"></div>
@@ -1060,7 +1179,7 @@
           <div id="smart-checkout-drawer">
 
             <!-- Header -->
-            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(11,17,32,0.08);margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:16px;">
               <div>
                 <h3 style="margin:0!important;font-size:1.3rem;">Review Your Order</h3>
                 <p style="margin:2px 0 0;font-size:0.82rem;color:var(--muted);" id="sco-subtitle">Ready to checkout</p>
@@ -1085,6 +1204,7 @@
             </div>
 
             <p style="font-size:0.7rem;color:var(--muted);text-align:center;margin:12px 0 0 0;">We earn a small commission at no extra cost to you ❤️</p>
+            <p style="font-size:0.72rem;font-weight:700;color:#00c2ff;text-align:center;margin:6px 0 0 0;">✓ Each store checkout below counts toward your scratch card reward</p>
           </div>
         </div>
 
@@ -1093,7 +1213,7 @@
 
     <!-- FAQ Section for SEO -->
     <section id="faq-section" class="card" style="margin-top:18px;">
-      <h3>❓ Frequently Asked Questions</h3>
+      <h3>Frequently Asked Questions</h3>
       <div id="faq-list">
         <div class="faq-item">
           <div class="faq-q">What food has the most protein per dollar?<span class="faq-chevron">⌄</span></div>
@@ -1137,6 +1257,21 @@
   </div>
 
   <!-- Mini Cart Drawer -->
+  <!-- Grocery Near-Me Modal -->
+  <div id="grocery-near-me-overlay">
+    <div id="grocery-near-me-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div>
+          <div style="font-size:1rem;font-weight:900;color:#e2e8f8;letter-spacing:-0.01em;">🏪 Shop Grocery Near Me</div>
+          <div id="grocery-near-me-sub" style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Finding stores near you...</div>
+        </div>
+        <button id="grocery-near-me-close" onclick="closeGroceryNearMe()" style="background:none;border:none;font-size:1.8rem;color:var(--muted);cursor:pointer;line-height:1;padding:0;">×</button>
+      </div>
+      <div id="grocery-near-me-store-tabs"></div>
+      <div id="grocery-near-me-list"></div>
+    </div>
+  </div>
+
   <!-- Near Me Modal -->
   <div id="near-me-modal-overlay" class="hidden">
     <div id="near-me-modal-card" class="card">
@@ -1160,18 +1295,30 @@
   <!-- Scratch Card Modal -->
   <div id="reward-modal-overlay">
     <div id="reward-modal">
-      <div id="reward-modal-emoji" style="font-size:3.5rem;margin-bottom:8px;">🎰</div>
-      <h2 id="reward-modal-title">You Earned a Scratch Card!</h2>
-      <p id="reward-modal-body">10 qualifying checkouts complete. Scratch below to reveal your reward.</p>
+      <div id="reward-modal-header">
+        <div id="reward-modal-tier-badge"></div>
+        <div id="reward-modal-emoji">🏆</div>
+        <h2 id="reward-modal-title">Reward Unlocked</h2>
+        <p id="reward-modal-subtitle"></p>
+      </div>
+      <div id="reward-modal-stats">
+        <div class="reward-stat"><div class="reward-stat-label">TIER</div><div class="reward-stat-value" id="reward-stat-tier">—</div></div>
+        <div class="reward-stat"><div class="reward-stat-label">ORDERS</div><div class="reward-stat-value" id="reward-stat-orders">—</div></div>
+        <div class="reward-stat"><div class="reward-stat-label">VOLUME</div><div class="reward-stat-value" id="reward-stat-volume">—</div></div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--muted);margin:0 0 12px;text-align:center;">Scratch below to reveal your prize</p>
       <div id="scratch-container">
         <canvas id="scratch-canvas" width="280" height="100"></canvas>
         <div id="scratch-prize"></div>
       </div>
-      <p id="scratch-hint">👆 Scratch to reveal</p>
+      <p id="scratch-hint">👆 Scratch to reveal your reward</p>
       <div id="scratch-claim" style="display:none;">
-        <p style="font-size:0.82rem;color:var(--muted);margin:12px 0 4px;">Email <strong>hello@mostvalueprotein.com</strong> with subject line <strong>"MVP Reward"</strong> to claim your discount.</p>
+        <div id="scratch-claim-inner">
+          <div id="scratch-won-amount"></div>
+          <p style="font-size:0.78rem;color:var(--muted);margin:8px 0 4px;">Email <strong>hello@mostvalueprotein.com</strong> with subject <strong>"MVP Reward"</strong> to claim.</p>
+        </div>
       </div>
-      <button class="primary" style="width:100%;padding:14px;font-size:1rem;margin-top:16px;" onclick="document.getElementById('reward-modal-overlay').classList.remove('open')">Close</button>
+      <button class="primary" style="width:100%;padding:14px;font-size:1rem;margin-top:16px;background:linear-gradient(90deg,#f97316,#ef4444);" onclick="document.getElementById('reward-modal-overlay').classList.remove('open')">Close</button>
     </div>
   </div>
 
@@ -1184,6 +1331,7 @@
   <div id="grocery-cart-btn" onclick="openGroceryCart()">
     🛒
     <span id="grocery-cart-count" style="display:none;">0</span>
+    <span id="cart-checkout-hint">checkout 👉</span>
   </div>
 
   <!-- Trash button — only visible when cart has items -->
@@ -1207,8 +1355,8 @@
       </div>
       <div id="grocery-cart-actions" style="display:none;">
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
-          <button onclick="closeGroceryCart();setTimeout(openSmartCheckout,360);" class="primary" style="width:100%;padding:16px;font-size:1.1rem;font-weight:700;border-radius:12px;">
-            Checkout →
+          <button onclick="closeGroceryCart();setTimeout(openSmartCheckout,360);" class="primary" style="width:100%;padding:16px;font-size:1rem;font-weight:800;border-radius:12px;">
+            Checkout with Most Value Protein Cart
           </button>
           <button onclick="shareGroceryList()" class="btn" style="padding:12px;">📤 Share My Cart</button>
           <button onclick="clearGroceryCart()" class="btn" style="padding:10px;font-size:0.85rem;color:var(--muted);">🗑 Clear Cart</button>
@@ -1373,6 +1521,28 @@ function openSmartCheckout() {
   const groups = splitCartIntoGroups(allItems);
   const pref   = getStorePref() || 'instacart';
 
+  const hasGrocery    = groups.grocery.length > 0;
+  const hasSupplement = groups.supplement.length > 0;
+  const hasRestaurant = groups.restaurant.length > 0;
+  const storeCount    = (hasGrocery || hasSupplement ? 1 : 0) + (hasRestaurant ? 1 : 0);
+
+  // Single store — skip drawer, go straight there
+  if (storeCount === 1) {
+    let url;
+    if (hasRestaurant) {
+      url = referralTracker.appendToUrl(buildStoreUrl('doordash', groups.restaurant));
+    } else if (hasSupplement && !hasGrocery) {
+      url = referralTracker.appendToUrl(buildStoreUrl('amazon', groups.supplement));
+    } else {
+      const grocItems = [...groups.grocery, ...groups.supplement];
+      url = referralTracker.appendToUrl(buildStoreUrl(pref, grocItems));
+    }
+    recordCheckout(allItems.reduce((s,i)=>s+(i.price||0),0));
+    window.open(url, '_blank');
+    closeGroceryCart();
+    return;
+  }
+
   // Populate item list
   const itemListEl = document.getElementById('sco-item-list');
   const subtitleEl = document.getElementById('sco-subtitle');
@@ -1395,7 +1565,7 @@ function openSmartCheckout() {
     const ppd = item.price > 0 ? (item.protein / item.price).toFixed(1) : '—';
     const typeTag = item.type === 'restaurant' ? '🍔' : item.store === 'amazon' ? '📦' : '🛒';
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(11,17,32,0.06);gap:8px;';
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);gap:8px;';
     row.innerHTML = `
       <span style="font-size:1.1rem;flex-shrink:0;">${typeTag}</span>
       <div style="flex:1;min-width:0;">
@@ -1406,6 +1576,10 @@ function openSmartCheckout() {
     `;
     itemListEl.appendChild(row);
   });
+
+  // Record combined checkout total when drawer opens — counts all items across all stores
+  const combinedTotal = allItems.reduce((s,i)=>s+(i.price||0),0);
+  recordCheckout(combinedTotal);
 
   // Store buttons — one per group, grocery stores selectable
   storeBtns.innerHTML = '';
@@ -1428,14 +1602,9 @@ function openSmartCheckout() {
       btn.href   = url;
       btn.target = '_blank';
       btn.rel    = 'noopener';
-      btn.style.cssText = `display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;margin-bottom:8px;text-decoration:none;color:white;font-weight:700;font-size:0.95rem;background:${isActive ? meta.color : 'rgba(11,17,32,0.06)'};color:${isActive ? 'white' : '#0b1220'};border:2px solid ${isActive ? meta.color : 'rgba(11,17,32,0.08)'};transition:opacity 0.15s ease;`;
+      btn.style.cssText = `display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;margin-bottom:8px;text-decoration:none;color:white;font-weight:700;font-size:0.95rem;background:${isActive ? meta.color : 'rgba(255,255,255,0.06)'};color:${isActive ? 'white' : '#e2e8f8'};border:2px solid ${isActive ? meta.color : 'rgba(255,255,255,0.07)'};transition:opacity 0.15s ease;`;
       btn.innerHTML = `<span style="font-size:1.3rem;">${meta.icon}</span><div><div>${meta.label}</div><div style="font-size:0.75rem;opacity:0.75;font-weight:400;">${meta.sub}</div></div>${isActive ? '<span style="margin-left:auto;font-size:0.78rem;background:rgba(255,255,255,0.2);padding:3px 8px;border-radius:99px;">✓ Preferred</span>' : ''}`;
-      btn.addEventListener('click', () => {
-        if (!isAllAmzn) setStorePref(store);
-        // Count checkout if cart total >= $50
-        const total = groceryCart.items.reduce((s,i)=>s+(i.price||0),0);
-        if(total>=50) recordCheckout();
-      });
+      btn.addEventListener('click', () => { if (!isAllAmzn) setStorePref(store); });
       btn.addEventListener('mouseover', () => btn.style.opacity = '0.88');
       btn.addEventListener('mouseout',  () => btn.style.opacity = '1');
       wrap.appendChild(btn);
@@ -1882,7 +2051,7 @@ document.querySelectorAll('.hashtag').forEach(h=>h.addEventListener('click',()=>
 // ═══════════════════════════════════════════════════
 (function(){
   const groceryData=[
-    {name:"Eggs",price:2.00,protein:48},{name:"Chicken Breast",price:4.35,protein:100},{name:"Canned Tuna",price:1.50,protein:30},{name:"Milk",price:3.00,protein:48},{name:"Liquid Egg Whites",price:6.00,protein:90},{name:"80/20 Ground Beef",price:5.00,protein:70},{name:"93/7 Ground Beef",price:6.50,protein:88},{name:"Greek Yogurt",price:1.50,protein:18},{name:"Tofu",price:2.50,protein:27.5},{name:"Peanut Butter",price:3.00,protein:30},{name:"Steak (Sirloin)",price:11.00,protein:100},{name:"Cheddar Cheese",price:4.00,protein:36},{name:"Lentils",price:1.00,protein:8.5},{name:"Ground Turkey",price:5.00,protein:40},{name:"Black Beans",price:1.00,protein:7.8},{name:"Chickpeas",price:1.00,protein:7.5},{name:"Canned Salmon",price:3.00,protein:21.6},{name:"Almonds",price:6.00,protein:39},{name:"Quinoa",price:4.00,protein:24.8},{name:"Edamame",price:3.00,protein:18},{name:"Cottage Cheese",price:3.50,protein:20.3},{name:"Protein Powder",price:25.00,protein:120},{name:"Turkey Breast",price:6.00,protein:27},{name:"Pork Loin",price:8.00,protein:33.6},{name:"Ham",price:5.00,protein:19.5},{name:"Frozen Shrimp",price:9.00,protein:34.2},{name:"Canned Chicken",price:2.50,protein:9.3},{name:"Hemp Seeds",price:8.00,protein:28},{name:"Beef Jerky",price:8.00,protein:16},{name:"Sardines",price:2.00,protein:4.6},{name:"Protein Bar",price:2.50,protein:20},{name:"Rotisserie Chicken",price:7.99,protein:140},{name:"Chicken Thighs",price:3.50,protein:80},{name:"Chicken Drumsticks",price:2.99,protein:75},{name:"Pork Shoulder",price:3.20,protein:70},{name:"Ground Chicken",price:4.50,protein:80},{name:"Skim Milk",price:3.00,protein:50},{name:"Deli Turkey",price:7.00,protein:80},{name:"Cod",price:8.00,protein:80},{name:"Tilapia (frozen)",price:6.00,protein:90},{name:"Turkey Meatballs",price:5.50,protein:84},{name:"Smoked Salmon",price:9.00,protein:62},{name:"Ahi Tuna Steak",price:8.00,protein:88},{name:"Pork Ribs",price:9.00,protein:96},{name:"Beef Liver",price:4.00,protein:78},{name:"Skirt Steak",price:10.00,protein:100},{name:"Low-Fat Cottage Cheese",price:3.50,protein:64},{name:"Plain Skyr",price:2.00,protein:22},{name:"Pumpkin Seeds",price:5.00,protein:38},{name:"String Cheese",price:4.00,protein:28},{name:"Mozzarella",price:4.50,protein:32}
+    {name:"Eggs",price:4.99,protein:48},{name:"Chicken Breast",price:4.17,protein:100},{name:"Canned Tuna",price:1.79,protein:30},{name:"Milk",price:4.70,protein:48},{name:"Liquid Egg Whites",price:7.49,protein:90},{name:"80/20 Ground Beef",price:5.99,protein:70},{name:"93/7 Ground Beef",price:7.49,protein:88},{name:"Greek Yogurt",price:1.75,protein:18},{name:"Tofu",price:2.99,protein:27.5},{name:"Peanut Butter",price:3.49,protein:30},{name:"Steak (Sirloin)",price:13.99,protein:100},{name:"Cheddar Cheese",price:4.99,protein:36},{name:"Lentils",price:1.29,protein:8.5},{name:"Ground Turkey",price:5.99,protein:40},{name:"Black Beans",price:1.29,protein:7.8},{name:"Chickpeas",price:1.29,protein:7.5},{name:"Canned Salmon",price:3.79,protein:21.6},{name:"Almonds",price:7.99,protein:39},{name:"Quinoa",price:4.99,protein:24.8},{name:"Edamame",price:3.49,protein:18},{name:"Cottage Cheese",price:3.79,protein:20.3},{name:"Protein Powder",price:29.99,protein:120},{name:"Turkey Breast",price:7.49,protein:27},{name:"Pork Loin",price:8.99,protein:33.6},{name:"Ham",price:5.99,protein:19.5},{name:"Frozen Shrimp",price:10.99,protein:34.2},{name:"Canned Chicken",price:2.99,protein:9.3},{name:"Hemp Seeds",price:9.99,protein:28},{name:"Beef Jerky",price:9.99,protein:16},{name:"Sardines",price:2.29,protein:4.6},{name:"Protein Bar",price:2.99,protein:20},{name:"Rotisserie Chicken",price:7.99,protein:140},{name:"Chicken Thighs",price:3.99,protein:80},{name:"Chicken Drumsticks",price:3.49,protein:75},{name:"Pork Shoulder",price:3.99,protein:70},{name:"Ground Chicken",price:5.49,protein:80},{name:"Skim Milk",price:4.49,protein:50},{name:"Deli Turkey",price:7.99,protein:80},{name:"Cod",price:9.99,protein:80},{name:"Tilapia (frozen)",price:6.99,protein:90},{name:"Turkey Meatballs",price:6.49,protein:84},{name:"Smoked Salmon",price:10.99,protein:62},{name:"Ahi Tuna Steak",price:9.99,protein:88},{name:"Pork Ribs",price:10.99,protein:96},{name:"Beef Liver",price:4.99,protein:78},{name:"Skirt Steak",price:12.99,protein:100},{name:"Low-Fat Cottage Cheese",price:3.79,protein:64},{name:"Plain Skyr",price:2.19,protein:22},{name:"Pumpkin Seeds",price:5.99,protein:38},{name:"String Cheese",price:4.99,protein:28},{name:"Mozzarella",price:5.49,protein:32}
   ].map(food=>({...food,ppd:food.protein/food.price}));
   const sorted=[...groceryData].sort((a,b)=>b.ppd-a.ppd);
 
@@ -1937,23 +2106,23 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(!document.getElementById('stack-builder')) return;
   const BUDGET=10.00;
   const allStackFoods=[
-    {name:"Eggs (dozen)",price:2.00,protein:48,calories:840,type:'grocery',source:'Grocery Store',query:'eggs dozen'},
-    {name:"Chicken Breast (1lb)",price:4.35,protein:100,calories:750,type:'grocery',source:'Grocery Store',query:'chicken breast boneless'},
-    {name:"Canned Tuna (can)",price:1.50,protein:30,calories:140,type:'grocery',source:'Grocery Store',query:'canned tuna'},
-    {name:"Greek Yogurt (cup)",price:1.50,protein:18,calories:100,type:'grocery',source:'Grocery Store',query:'greek yogurt'},
-    {name:"Milk (half gallon)",price:3.00,protein:48,calories:960,type:'grocery',source:'Grocery Store',query:'whole milk'},
-    {name:"Ground Beef 80/20",price:5.00,protein:70,calories:1150,type:'grocery',source:'Grocery Store',query:'ground beef 80 20'},
-    {name:"Cottage Cheese",price:3.50,protein:56,calories:400,type:'grocery',source:'Grocery Store',query:'cottage cheese'},
-    {name:"Protein Powder (scoop)",price:1.00,protein:25,calories:120,type:'grocery',source:'Supplement Store',query:'whey protein powder'},
-    {name:"Protein Bar",price:2.50,protein:20,calories:220,type:'grocery',source:'Supplement Store',query:'protein bars'},
+    {name:"Eggs (dozen)",price:4.99,protein:48,calories:840,type:'grocery',source:'Grocery Store',query:'eggs dozen'},
+    {name:"Chicken Breast (1lb)",price:4.17,protein:100,calories:750,type:'grocery',source:'Grocery Store',query:'chicken breast boneless'},
+    {name:"Canned Tuna (can)",price:1.79,protein:30,calories:140,type:'grocery',source:'Grocery Store',query:'canned tuna'},
+    {name:"Greek Yogurt (cup)",price:1.75,protein:18,calories:100,type:'grocery',source:'Grocery Store',query:'greek yogurt'},
+    {name:"Milk (gallon)",price:4.70,protein:48,calories:960,type:'grocery',source:'Grocery Store',query:'whole milk'},
+    {name:"Ground Beef 80/20",price:5.99,protein:70,calories:1150,type:'grocery',source:'Grocery Store',query:'ground beef 80 20'},
+    {name:"Cottage Cheese",price:3.79,protein:56,calories:400,type:'grocery',source:'Grocery Store',query:'cottage cheese'},
+    {name:"Protein Powder (scoop)",price:1.10,protein:25,calories:120,type:'grocery',source:'Supplement Store',query:'whey protein powder'},
+    {name:"Protein Bar",price:2.99,protein:20,calories:220,type:'grocery',source:'Supplement Store',query:'protein bars'},
     {name:"Rotisserie Chicken",price:7.99,protein:140,calories:1500,type:'grocery',source:'Grocery Store',query:'rotisserie chicken'},
-    {name:"Sardines (can)",price:2.00,protein:22,calories:190,type:'grocery',source:'Grocery Store',query:'canned sardines'},
-    {name:"Liquid Egg Whites",price:6.00,protein:90,calories:450,type:'grocery',source:'Grocery Store',query:'liquid egg whites'},
-    {name:"Chicken Thighs (1lb)",price:3.50,protein:80,calories:900,type:'grocery',source:'Grocery Store',query:'chicken thighs'},
-    {name:"Skyr Yogurt",price:2.00,protein:22,calories:110,type:'grocery',source:'Grocery Store',query:'icelandic skyr yogurt'},
-    {name:"Chipotle Double Chicken Bowl",price:11.45,protein:74,calories:720,type:'restaurant',source:'Chipotle',query:'chipotle chicken bowl'},
-    {name:"Chick-fil-A Grilled Nuggets",price:7.49,protein:48,calories:210,type:'restaurant',source:"Chick-fil-A",query:'chick fil a grilled nuggets'},
-    {name:"Panda Teriyaki Chicken",price:5.07,protein:36,calories:300,type:'restaurant',source:'Panda Express',query:'panda express teriyaki chicken'}
+    {name:"Sardines (can)",price:1.79,protein:22,calories:190,type:'grocery',source:'Grocery Store',query:'canned sardines'},
+    {name:"Liquid Egg Whites",price:7.49,protein:90,calories:450,type:'grocery',source:'Grocery Store',query:'liquid egg whites'},
+    {name:"Chicken Thighs (1lb)",price:3.99,protein:80,calories:900,type:'grocery',source:'Grocery Store',query:'chicken thighs'},
+    {name:"Skyr Yogurt",price:2.19,protein:22,calories:110,type:'grocery',source:'Grocery Store',query:'icelandic skyr yogurt'},
+    {name:"Chipotle Double Chicken Bowl",price:13.50,protein:74,calories:720,type:'restaurant',source:'Chipotle',query:'chipotle chicken bowl'},
+    {name:"Chick-fil-A Grilled Nuggets",price:6.29,protein:48,calories:210,type:'restaurant',source:"Chick-fil-A",query:'chick fil a grilled nuggets'},
+    {name:"Panda Teriyaki Chicken",price:5.49,protein:36,calories:300,type:'restaurant',source:'Panda Express',query:'panda express teriyaki chicken'}
   ];
   const slugify=t=>t.toString().toLowerCase().replace(/\s+/g,'-').replace(/[^\w\-]+/g,'').replace(/\-\-+/g,'-').replace(/^-+/,'').replace(/-+$/,'');
   allStackFoods.forEach(f=>f.slug=slugify(f.name));
@@ -2195,7 +2364,308 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // ═══════════════════════════════════════════════════
-// DEALS SHELF — flash on add
+// GROCERY NEAR-ME ENGINE
+// ═══════════════════════════════════════════════════
+const GROCERY_STORES = {
+  aldi: {
+    name:'Aldi', icon:'🟥', color:'#e2001a',
+    instacartSlug:'aldi',
+    overpassNames:['aldi'],
+    items:[
+      {name:'Eggs (dozen)',price:2.49,protein:48,calories:840,query:'eggs dozen',stat:'Aldi pasture-raised $4.35 vs Walmart $6.46 — same quality, less cost'},
+      {name:'Chicken Thighs (5lb)',price:7.75,protein:400,calories:4500,query:'chicken thighs',stat:'$1.55/lb — virtually identical to Walmart at $7.85 for 5lb'},
+      {name:'Friendly Farms Greek Yogurt (32oz)',price:3.09,protein:80,calories:560,query:'greek yogurt',stat:'Ranked higher than Great Value in blind taste tests'},
+      {name:'Friendly Farms Cottage Cheese',price:2.89,protein:56,calories:400,query:'cottage cheese',stat:'High protein Friendly Farms line — one of Aldi\'s best kept secrets'},
+      {name:'Northern Catch Tuna (5oz)',price:0.99,protein:20,calories:70,query:'canned tuna',stat:'Solid white albacore — comparable to name brands at half the price'},
+      {name:'Grass Fed Ground Beef (1lb)',price:6.59,protein:70,calories:1152,query:'ground beef grass fed',stat:'$6.59 vs $8.71 at Walmart for grass-fed — biggest price gap of any item'},
+      {name:'Elevation Whey Protein (2lb)',price:12.99,protein:240,calories:1200,query:'whey protein powder',stat:'Aldi house brand — 18g protein per $ vs 10g at most name brands'},
+      {name:'Chicken Breast (1lb)',price:3.49,protein:100,calories:750,query:'chicken breast',stat:'Organic option available — rare at this price point'},
+      {name:'Simms Grass Fed Beef Sticks (8pk)',price:5.99,protein:56,calories:560,query:'beef sticks',stat:'Grass fed, no antibiotics — convenience protein at Aldi pricing'},
+      {name:'Elevation Protein Bars (5ct)',price:4.99,protein:100,calories:1050,query:'protein bars',stat:'Aldi\'s answer to Quest bars — fraction of the price'},
+      {name:'Northern Catch Canned Salmon',price:2.49,protein:21,calories:120,query:'canned salmon',stat:'Wild caught — 8g protein per $ with omega-3s included'},
+      {name:'Friendly Farms Milk (gallon)',price:2.89,protein:128,calories:2560,query:'whole milk gallon',stat:'44g protein per $ — consistently among lowest priced nationally'},
+      {name:'Simply Natura Chickpea Pasta',price:2.49,protein:42,calories:840,query:'chickpea pasta',stat:'17g protein per $ — plant protein with pasta macros'},
+      {name:'L\'Oven Fresh Protein Wraps (6ct)',price:3.49,protein:60,calories:720,query:'protein wraps',stat:'10g protein per wrap — FIND item, not always in stock'},
+      {name:'Southern Grove Pepitas (16oz)',price:3.49,protein:48,calories:2400,query:'pumpkin seeds pepitas',stat:'14g protein per $ — most underrated plant protein at Aldi'},
+    ]
+  },
+  walmart: {
+    name:'Walmart', icon:'🛒', color:'#0071ce',
+    instacartSlug:'walmart',
+    overpassNames:['walmart','wal-mart','wal mart'],
+    items:[
+      {name:'Canned Tuna (5oz)',price:0.98,protein:20,calories:70,query:'canned tuna',stat:'Most price-stable protein — barely moved in 5 years'},
+      {name:'Chicken Thighs (1lb)',price:2.57,protein:80,calories:900,query:'chicken thighs',stat:'Cheaper per lb than breast — more protein per $'},
+      {name:'Rotisserie Chicken',price:4.98,protein:140,calories:1500,query:'rotisserie chicken',stat:'Walmart dropped price $1 in 2026 — now best value rotisserie in US'},
+      {name:'Eggs (dozen)',price:1.97,protein:48,calories:840,query:'eggs dozen',stat:'Down from $6.22 peak in 2025 — back near normal (BLS)'},
+      {name:'Chicken Breast (1lb)',price:3.97,protein:100,calories:750,query:'chicken breast',stat:'25g protein per serving — down 18% from 2022 peak'},
+      {name:'Great Value Whey Protein (2lb)',price:14.97,protein:240,calories:1200,query:'whey protein powder',stat:'Walmart private label — 60% cheaper than name brands'},
+      {name:'Canned Chicken (12.5oz)',price:1.97,protein:25,calories:120,query:'canned chicken',stat:'5-year shelf life — best emergency protein per dollar'},
+      {name:'Ground Turkey (1lb)',price:4.49,protein:85,calories:760,query:'ground turkey',stat:'Leaner than beef — 19g protein per $ at Walmart pricing'},
+      {name:'Cottage Cheese (24oz)',price:3.48,protein:84,calories:600,query:'cottage cheese',stat:'Casein protein — digests slowly, ideal before bed'},
+      {name:'Greek Yogurt (32oz)',price:4.48,protein:80,calories:560,query:'greek yogurt',stat:'2x protein of regular yogurt — same price range'},
+      {name:'Milk (gallon)',price:2.66,protein:128,calories:2560,query:'whole milk gallon',stat:'Walmart milk down from $3.68 in 2023 to $2.66 in 2026'},
+      {name:'Peanut Butter (16oz)',price:2.97,protein:56,calories:2640,query:'peanut butter',stat:'19g protein per $ — shelf stable, calorie dense'},
+      {name:'Ground Beef 80/20 (1lb)',price:4.86,protein:70,calories:1152,query:'ground beef 80/20',stat:'Up 30% in 2025 due to record-low US cattle supply'},
+      {name:'Sardines (3.75oz)',price:1.28,protein:22,calories:190,query:'sardines canned',stat:'Most underrated protein — 17g protein per $ at Walmart'},
+      {name:'String Cheese (12ct)',price:3.48,protein:84,calories:840,query:'string cheese',stat:'7g protein per stick — portable, no prep needed'},
+    ]
+  },
+  kroger: {
+    name:'Kroger', icon:'🔵', color:'#00539f',
+    instacartSlug:'kroger',
+    overpassNames:['kroger','fred meyer','ralphs','king soopers','fry\'s','smith\'s','pick n save'],
+    items:[
+      {name:'Frozen Chicken Thighs (3lb)',price:7.99,protein:240,calories:2700,query:'chicken thighs frozen',stat:'$2.66/lb — Kroger weekly deal May 2026'},
+      {name:'Eggs (dozen)',price:2.99,protein:48,calories:840,query:'eggs dozen',stat:'Down from 2025 peak — Kroger private label best value'},
+      {name:'Simple Truth Cottage Cheese (21g protein)',price:1.99,protein:21,calories:140,query:'simple truth cottage cheese',stat:'Kroger expanded Simple Truth protein line to 110+ items Jan 2026'},
+      {name:'Chicken Breast (1lb)',price:4.29,protein:100,calories:750,query:'chicken breast boneless',stat:'23g protein per $ — strong value vs national average'},
+      {name:'Simple Truth Greek Yogurt',price:1.79,protein:18,calories:100,query:'simple truth greek yogurt',stat:'Part of Kroger\'s expanding 110-item protein line (Jan 2026)'},
+      {name:'Canned Tuna (5oz)',price:1.19,protein:20,calories:70,query:'canned tuna',stat:'Price held stable — one of grocery\'s most consistent proteins'},
+      {name:'Ground Turkey (1lb)',price:4.99,protein:85,calories:760,query:'ground turkey',stat:'17g protein per $ — leaner alternative to ground beef'},
+      {name:'Deli Turkey Breast (1lb)',price:7.99,protein:80,calories:480,query:'deli turkey breast',stat:'10g protein per $ — ready to eat, no prep'},
+      {name:'Kroger Whey Protein',price:19.99,protein:240,calories:1200,query:'whey protein powder',stat:'Private label protein — 40% cheaper than branded equivalents'},
+      {name:'Milk (gallon)',price:3.29,protein:128,calories:2560,query:'whole milk gallon',stat:'Dairy prices predicted to decline in 2026 per USDA ERS'},
+      {name:'Cottage Cheese (16oz)',price:3.29,protein:56,calories:400,query:'cottage cheese',stat:'Gut-friendly cultured dairy — Kroger 2026 trend pick'},
+      {name:'Canned Chicken (12.5oz)',price:2.49,protein:25,calories:120,query:'canned chicken',stat:'Shelf stable — protein per $ rivals fresh chicken'},
+      {name:'Ground Beef 80/20 (1lb)',price:5.49,protein:70,calories:1152,query:'ground beef',stat:'US beef supply at decades-low — prices up 30% in 2025'},
+      {name:'Peanut Butter (18oz)',price:3.29,protein:63,calories:2970,query:'peanut butter',stat:'19g protein per $ — shelf stable, versatile'},
+      {name:'Sardines (3.75oz)',price:1.49,protein:22,calories:190,query:'sardines',stat:'Most underrated protein in the grocery store'},
+    ]
+  },
+  target: {
+    name:'Target', icon:'🎯', color:'#cc0000',
+    instacartSlug:'target',
+    overpassNames:['target'],
+    items:[
+      {name:'Good & Gather Chicken Breast (1lb)',price:4.49,protein:100,calories:750,query:'chicken breast',stat:'Target private label — 22g protein per $'},
+      {name:'Eggs (dozen)',price:3.49,protein:48,calories:840,query:'eggs dozen',stat:'Target cage-free standard — down from 2025 peak prices'},
+      {name:'Good & Gather Greek Yogurt',price:1.99,protein:18,calories:100,query:'good gather greek yogurt',stat:'Target house brand — strong value vs Chobani/Fage'},
+      {name:'Good & Gather Cottage Cheese',price:3.99,protein:56,calories:400,query:'cottage cheese',stat:'14g protein per $ — cultured dairy comeback in 2026'},
+      {name:'Canned Tuna (5oz)',price:1.29,protein:20,calories:70,query:'canned tuna',stat:'15g protein per $ — most stable grocery protein over decade'},
+      {name:'Rotisserie Chicken',price:6.99,protein:140,calories:1500,query:'rotisserie chicken',stat:'20g protein per $ — ready to eat, zero prep'},
+      {name:'Market Pantry Ground Turkey',price:4.79,protein:85,calories:760,query:'ground turkey',stat:'Leaner than beef — 18g protein per $ at Target pricing'},
+      {name:'RXBar Protein Bars (12ct)',price:21.99,protein:240,calories:2640,query:'rxbar protein bars',stat:'20g whole food protein per bar — no junk ingredients'},
+      {name:'Good & Gather Milk (gallon)',price:3.79,protein:128,calories:2560,query:'whole milk gallon',stat:'Target Circle members often get $0.50 off — check app'},
+      {name:'String Cheese (12ct)',price:4.49,protein:84,calories:840,query:'string cheese',stat:'7g protein per stick — easiest portable protein'},
+      {name:'Canned Chicken (12.5oz)',price:2.29,protein:25,calories:120,query:'canned chicken',stat:'11g protein per $ — shelf stable convenience protein'},
+      {name:'Peanut Butter (16oz)',price:3.19,protein:56,calories:2640,query:'peanut butter',stat:'18g protein per $ — Target Circle often has $1 off'},
+      {name:'Ground Beef 80/20 (1lb)',price:5.49,protein:70,calories:1152,query:'ground beef',stat:'Beef prices up 30% in 2025 — chicken is better value now'},
+      {name:'Good & Gather Deli Turkey',price:4.99,protein:48,calories:280,query:'deli turkey',stat:'10g protein per $ — ready to eat, no cooking'},
+      {name:'Fairlife Protein Milk (52oz)',price:5.99,protein:130,calories:910,query:'fairlife protein milk',stat:'3x protein of regular milk — unique ultra-filtered formula'},
+    ]
+  },
+  wholefoods: {
+    name:'Whole Foods', icon:'🌿', color:'#00674b',
+    instacartSlug:'whole-foods',
+    overpassNames:['whole foods','whole foods market'],
+    items:[
+      {name:'365 Chicken Breast (1lb)',price:4.99,protein:100,calories:750,query:'chicken breast',stat:'$7.99 conventional vs $4.99 365 brand — know the difference'},
+      {name:'Wild Alaskan Salmon (1lb)',price:9.99,protein:88,calories:800,query:'wild salmon',stat:'9g protein per $ — omega-3s justify the premium over tuna'},
+      {name:'365 Cottage Cheese',price:4.49,protein:56,calories:400,query:'365 cottage cheese',stat:'12g protein per $ — organic, no additives'},
+      {name:'365 Greek Yogurt (32oz)',price:5.99,protein:80,calories:560,query:'365 greek yogurt',stat:'13g protein per $ — plain version has zero added sugar'},
+      {name:'365 Cage Free Eggs (dozen)',price:4.99,protein:48,calories:840,query:'cage free eggs',stat:'10g protein per $ — cage-free standard across all WF eggs'},
+      {name:'365 Canned Tuna (5oz)',price:2.49,protein:20,calories:70,query:'365 tuna',stat:'8g protein per $ — pole & line caught, BPA-free can'},
+      {name:'365 Ground Turkey (1lb)',price:6.99,protein:85,calories:760,query:'ground turkey',stat:'12g protein per $ — no antibiotics ever'},
+      {name:'Rotisserie Chicken',price:13.99,protein:140,calories:1500,query:'rotisserie chicken',stat:'10g protein per $ — vs $4.98 at Walmart. Worth it?'},
+      {name:'365 Peanut Butter (16oz)',price:3.99,protein:56,calories:2640,query:'natural peanut butter',stat:'14g protein per $ — one ingredient: peanuts'},
+      {name:'Vital Farms Eggs (dozen)',price:7.99,protein:48,calories:840,query:'vital farms eggs',stat:'6g protein per $ — pasture raised, 108 sq ft per hen'},
+      {name:'365 Canned Chicken (12.5oz)',price:3.99,protein:25,calories:120,query:'canned chicken',stat:'6g protein per $ — same macro as Walmart at 2x the price'},
+      {name:'RXBar (single)',price:2.99,protein:12,calories:210,query:'rxbar protein bar',stat:'4g protein per $ — whole food ingredients, no B.S.'},
+      {name:'Kite Hill Greek Yogurt (16oz)',price:6.99,protein:48,calories:560,query:'kite hill greek yogurt',stat:'Plant-based — 7g protein per $ for dairy-free shoppers'},
+      {name:'365 Milk (gallon)',price:5.99,protein:128,calories:2560,query:'organic whole milk',stat:'Organic certified — 21g protein per $ vs $2.66 at Walmart'},
+      {name:'Wild Shrimp (1lb)',price:12.99,protein:96,calories:400,query:'wild shrimp',stat:'7g protein per $ — lowest calorie high-protein seafood option'},
+    ]
+  },
+  heb: {
+    name:'H-E-B', icon:'🤠', color:'#e31837',
+    instacartSlug:'h-e-b',
+    overpassNames:['h-e-b','heb','h e b','central market'],
+    items:[
+      {name:'Canned Tuna (5oz)',price:0.99,protein:20,calories:70,query:'canned tuna',stat:'30g protein per $ — H-E-B pricing rivals Walmart on tuna'},
+      {name:'Hill Country Fare Eggs (dozen)',price:2.49,protein:48,calories:840,query:'eggs dozen',stat:'19g protein per $ — H-E-B private label, Texas staple'},
+      {name:'Chicken Breast (1lb)',price:3.99,protein:100,calories:750,query:'chicken breast',stat:'25g protein per $ — H-E-B consistently beats national avg'},
+      {name:'Pork Tenderloin (1lb)',price:3.99,protein:100,calories:560,query:'pork tenderloin',stat:'25g protein per $ — leanest pork cut, underrated value'},
+      {name:'H-E-B Cottage Cheese',price:3.29,protein:56,calories:400,query:'heb cottage cheese',stat:'17g protein per $ — H-E-B dairy consistently top rated'},
+      {name:'H-E-B Greek Yogurt',price:1.49,protein:18,calories:100,query:'heb greek yogurt',stat:'12g protein per $ — H-E-B beats Walmart on yogurt pricing'},
+      {name:'Rotisserie Chicken',price:6.99,protein:140,calories:1500,query:'rotisserie chicken',stat:'20g protein per $ — H-E-B rotisserie is Texas legend'},
+      {name:'Ground Turkey (1lb)',price:4.49,protein:85,calories:760,query:'ground turkey',stat:'19g protein per $ — H-E-B pricing among best nationally'},
+      {name:'Tilapia Fillets (1lb)',price:3.99,protein:84,calories:440,query:'tilapia fillets',stat:'21g protein per $ — H-E-B seafood department is exceptional'},
+      {name:'Milk (gallon)',price:3.49,protein:128,calories:2560,query:'whole milk gallon',stat:'37g protein per $ — H-E-B milk prices below national average'},
+      {name:'Canned Chicken (12.5oz)',price:1.79,protein:25,calories:120,query:'canned chicken',stat:'14g protein per $ — H-E-B store brand rivals national brands'},
+      {name:'String Cheese (12ct)',price:3.99,protein:84,calories:840,query:'string cheese',stat:'21g protein per $ — portable, no-prep protein'},
+      {name:'Ground Beef 80/20 (1lb)',price:4.99,protein:70,calories:1152,query:'ground beef',stat:'14g protein per $ — H-E-B beef quality above average for price'},
+      {name:'Peanut Butter (16oz)',price:2.49,protein:56,calories:2640,query:'peanut butter',stat:'22g protein per $ — H-E-B house brand among cheapest in US'},
+      {name:'H-E-B Protein Shake (4pk)',price:7.99,protein:100,calories:560,query:'protein shake',stat:'13g protein per $ — H-E-B house brand protein, Texas exclusive'},
+    ]
+  }
+};
+
+// Overpass query for grocery stores
+async function fetchNearbyGroceryStores(lat, lon) {
+  try {
+    const names = Object.values(GROCERY_STORES).flatMap(s => s.overpassNames);
+    const nameFilter = names.map(n => `node["name"~"${n}",i](around:16093,${lat},${lon});way["name"~"${n}",i](around:16093,${lat},${lon});`).join('');
+    const resp = await fetch('https://overpass-api.de/api/interpreter', {
+      method:'POST',
+      body:`[out:json][timeout:25];(${nameFilter});out center;`
+    });
+    if (!resp.ok) throw new Error('status ' + resp.status);
+    const data = await resp.json();
+    return data.elements || [];
+  } catch(e) {
+    console.error('Grocery Overpass failed:', e.message);
+    return [];
+  }
+}
+
+function matchGroceryStore(elements) {
+  // Returns array of matched store keys with distances, sorted by distance
+  const matched = [];
+  elements.forEach(el => {
+    const name = (el.tags && el.tags.name || '').toLowerCase();
+    const lat = el.lat || (el.center && el.center.lat);
+    const lon = el.lon || (el.center && el.center.lon);
+    Object.entries(GROCERY_STORES).forEach(([key, store]) => {
+      if (store.overpassNames.some(n => name.includes(n))) {
+        const dist = haversineDistance(window._groceryUserLat, window._groceryUserLon, lat, lon);
+        if (!matched.find(m => m.key === key) || matched.find(m => m.key === key).distance > dist) {
+          const existing = matched.findIndex(m => m.key === key);
+          if (existing >= 0) matched[existing].distance = dist;
+          else matched.push({key, distance: dist});
+        }
+      }
+    });
+  });
+  return matched.sort((a,b) => a.distance - b.distance);
+}
+
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 3958.8;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+let _activeGroceryStore = null;
+let _nearbyStores = [];
+
+function openGroceryNearMe() {
+  const overlay = document.getElementById('grocery-near-me-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('grocery-near-me-sub').textContent = 'Finding grocery stores near you...';
+  document.getElementById('grocery-near-me-store-tabs').innerHTML = '';
+  document.getElementById('grocery-near-me-list').innerHTML = '<div style="text-align:center;padding:32px;"><div style="font-size:2.5rem;">🏪</div><div style="margin-top:12px;color:var(--muted);">Detecting nearby stores...</div></div>';
+
+  navigator.geolocation.getCurrentPosition(async pos => {
+    window._groceryUserLat = pos.coords.latitude;
+    window._groceryUserLon = pos.coords.longitude;
+
+    const elements = await fetchNearbyGroceryStores(pos.coords.latitude, pos.coords.longitude);
+    _nearbyStores = matchGroceryStore(elements);
+
+    // Build tabs — nearby stores first, then all others
+    const tabs = document.getElementById('grocery-near-me-store-tabs');
+    const allStoreKeys = Object.keys(GROCERY_STORES);
+
+    // Always show all 5 tabs, mark nearby ones
+    allStoreKeys.forEach(key => {
+      const store = GROCERY_STORES[key];
+      const nearby = _nearbyStores.find(s => s.key === key);
+      const btn = document.createElement('button');
+      btn.className = 'grocery-store-tab' + (nearby ? ' nearby' : '');
+      btn.innerHTML = `<span class="tab-icon">${store.icon}</span><span class="tab-name">${store.name}</span>${nearby ? `<span class="tab-dist">${nearby.distance.toFixed(1)}mi</span>` : ''}`;
+      btn.onclick = () => showGroceryStoreItems(key);
+      tabs.appendChild(btn);
+    });
+
+    // Auto-select closest nearby store, or default to Walmart
+    const defaultKey = _nearbyStores.length > 0 ? _nearbyStores[0].key : 'walmart';
+    showGroceryStoreItems(defaultKey);
+
+    const sub = _nearbyStores.length > 0
+      ? `Found ${_nearbyStores.length} store${_nearbyStores.length>1?'s':''} near you — ranked by protein per dollar`
+      : 'No stores detected nearby — showing all stores';
+    document.getElementById('grocery-near-me-sub').textContent = sub;
+
+  }, err => {
+    document.getElementById('grocery-near-me-sub').textContent = 'Location unavailable — browse all stores';
+    document.getElementById('grocery-near-me-list').innerHTML = '';
+    const allStoreKeys = Object.keys(GROCERY_STORES);
+    const tabs = document.getElementById('grocery-near-me-store-tabs');
+    allStoreKeys.forEach(key => {
+      const store = GROCERY_STORES[key];
+      const btn = document.createElement('button');
+      btn.className = 'grocery-store-tab';
+      btn.innerHTML = `<span class="tab-icon">${store.icon}</span><span class="tab-name">${store.name}</span>`;
+      btn.onclick = () => showGroceryStoreItems(key);
+      tabs.appendChild(btn);
+    });
+    showGroceryStoreItems('walmart');
+  });
+}
+
+function showGroceryStoreItems(storeKey) {
+  _activeGroceryStore = storeKey;
+  const store = GROCERY_STORES[storeKey];
+
+  // Update active tab
+  document.querySelectorAll('.grocery-store-tab').forEach((btn, i) => {
+    const key = Object.keys(GROCERY_STORES)[i];
+    btn.classList.toggle('active', key === storeKey);
+  });
+
+  // Sort items by protein per dollar
+  const sorted = [...store.items].map(item => ({
+    ...item,
+    ppd: item.protein / item.price
+  })).sort((a,b) => b.ppd - a.ppd);
+
+  const list = document.getElementById('grocery-near-me-list');
+  list.innerHTML = '';
+
+  const ranks = ['🥇','🥈','🥉'];
+  sorted.forEach((item, i) => {
+    const rank = i < 3 ? ranks[i] : `${i+1}.`;
+    const instacartUrl = referralTracker.appendToUrl(
+      `https://www.instacart.com/store/${store.instacartSlug}/search_v3/${encodeURIComponent(item.query)}?utm_source=affiliate&utm_campaign=YOUR_INSTACART_PARTNER_ID`
+    );
+
+    const row = document.createElement('div');
+    row.className = 'grocery-item-row';
+    row.innerHTML = `
+      <div style="font-size:1.1rem;flex-shrink:0;">${rank}</div>
+      <div class="grocery-item-info">
+        <div class="grocery-item-name">${item.name}</div>
+        <div class="grocery-item-meta">${item.ppd.toFixed(1)}g protein / $1 · $${item.price.toFixed(2)} · ${item.protein}g protein</div>
+        ${item.stat ? `<div class="grocery-item-stat">${item.stat}</div>` : ''}
+      </div>
+      <div class="grocery-item-actions">
+        <button class="grocery-cart-add" onclick="groceryNearMeAdd(this,'${item.name}',${item.price},${item.protein},${item.calories},'${store.name}')">🛒 Add</button>
+        <a href="${instacartUrl}" target="_blank" rel="noopener" class="grocery-buy-now" onclick="recordCheckout(${item.price})">Buy Now →</a>
+        <a href="${instacartUrl}" target="_blank" rel="noopener" class="grocery-buy-link">at ${store.name}</a>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function groceryNearMeAdd(btn, name, price, protein, calories, source) {
+  groceryCart.add({name, price, protein, calories, source, type:'grocery', query:name, store:'instacart'});
+  const orig = btn.textContent;
+  btn.textContent = '✓';
+  btn.style.background = 'linear-gradient(90deg,#059669,#10b981)';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1200);
+}
+window.groceryNearMeAdd = groceryNearMeAdd;
+
+function closeGroceryNearMe() {
+  document.getElementById('grocery-near-me-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+window.closeGroceryNearMe = closeGroceryNearMe;
+window.openGroceryNearMe = openGroceryNearMe;
 // ═══════════════════════════════════════════════════
 function shelfFlash(card){
   card.classList.add('added');
@@ -2387,24 +2857,47 @@ const _origCartAdd = groceryCart.add.bind(groceryCart);
 groceryCart.add = function(item) {
   _origCartAdd(item);
   showToast(`✓ ${item.name} added to cart`, 'success');
+  fireCartChar();
 };
+
+// Cart character animation
+const CART_CHARS=['🔥','💪','⚡','🏆','💥','🦁','🚀','💫','🌟','🎯','🥊','🐉','⚔️','🦸','🧙','🛡️','🌪️','🦅','🏋️','🔱'];
+function fireCartChar(){
+  const count = Math.random() < 0.4 ? 2 : 1;
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='cart-char';
+      el.textContent=CART_CHARS[Math.floor(Math.random()*CART_CHARS.length)];
+      // random start position across screen
+      el.style.left=(10+Math.random()*80)+'vw';
+      el.style.top=(20+Math.random()*55)+'vh';
+      // random trajectory
+      el.style.setProperty('--tx',(Math.random()-0.5)*200+'px');
+      el.style.setProperty('--ty',-(60+Math.random()*140)+'px');
+      el.style.setProperty('--tr',(Math.random()-0.5)*50+'deg');
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),1050);
+    },i*150);
+  }
+}
 
 // ═══════════════════════════════════════════════════
 // FOOD OF THE DAY
 // ═══════════════════════════════════════════════════
 const FOTD_POOL = [
-  { name:'Eggs (dozen)',     emoji:'🥚', price:2.00, protein:48,  calories:840, query:'eggs dozen',         store:'instacart', type:'grocery' },
-  { name:'Chicken Breast',   emoji:'🍗', price:4.35, protein:100, calories:750, query:'chicken breast',     store:'instacart', type:'grocery' },
-  { name:'Canned Tuna',      emoji:'🐟', price:1.50, protein:30,  calories:140, query:'canned tuna bulk',   store:'amazon',    type:'supplement' },
-  { name:'Cottage Cheese',   emoji:'🥛', price:3.50, protein:56,  calories:400, query:'cottage cheese',     store:'instacart', type:'grocery' },
-  { name:'Greek Yogurt',     emoji:'🫙', price:1.50, protein:18,  calories:100, query:'greek yogurt',       store:'instacart', type:'grocery' },
+  { name:'Eggs (dozen)',     emoji:'🥚', price:4.99, protein:48,  calories:840, query:'eggs dozen',         store:'instacart', type:'grocery' },
+  { name:'Chicken Breast',   emoji:'🍗', price:4.17, protein:100, calories:750, query:'chicken breast',     store:'instacart', type:'grocery' },
+  { name:'Canned Tuna',      emoji:'🐟', price:1.79, protein:30,  calories:140, query:'canned tuna bulk',   store:'amazon',    type:'supplement' },
+  { name:'Cottage Cheese',   emoji:'🥛', price:3.79, protein:56,  calories:400, query:'cottage cheese',     store:'instacart', type:'grocery' },
+  { name:'Greek Yogurt',     emoji:'🫙', price:1.75, protein:18,  calories:100, query:'greek yogurt',       store:'instacart', type:'grocery' },
   { name:'Rotisserie Chicken',emoji:'🍖',price:7.99, protein:140, calories:1500,query:'rotisserie chicken', store:'instacart', type:'grocery' },
-  { name:'Liquid Egg Whites',emoji:'🥚', price:6.00, protein:90,  calories:450, query:'liquid egg whites',  store:'instacart', type:'grocery' },
-  { name:'Chicken Thighs',   emoji:'🍗', price:3.50, protein:80,  calories:900, query:'chicken thighs',     store:'instacart', type:'grocery' },
-  { name:'McDonald\'s McDouble',emoji:'🍔',price:2.50,protein:22,calories:400, query:"mcdonald's mcdouble",store:'doordash',  type:'restaurant', source:"McDonald's" },
-  { name:'Sardines (can)',    emoji:'🐟', price:1.50, protein:24,  calories:190, query:'canned sardines',    store:'amazon',    type:'supplement' },
-  { name:'Chick-fil-A Grilled Nuggets',emoji:'🍗',price:4.87,protein:38,calories:200,query:'chick fil a grilled nuggets',store:'doordash',type:'restaurant',source:"Chick-fil-A" },
-  { name:'Whey Protein (scoop)',emoji:'💪',price:1.00,protein:25,calories:120,query:'whey protein powder',  store:'amazon',    type:'supplement' },
+  { name:'Liquid Egg Whites',emoji:'🥚', price:7.49, protein:90,  calories:450, query:'liquid egg whites',  store:'instacart', type:'grocery' },
+  { name:'Chicken Thighs',   emoji:'🍗', price:3.99, protein:80,  calories:900, query:'chicken thighs',     store:'instacart', type:'grocery' },
+  { name:'McDonald\'s McDouble',emoji:'🍔',price:3.19,protein:22,calories:400, query:"mcdonald's mcdouble",store:'doordash',  type:'restaurant', source:"McDonald's" },
+  { name:'Sardines (can)',    emoji:'🐟', price:1.79, protein:24,  calories:190, query:'canned sardines',    store:'amazon',    type:'supplement' },
+  { name:'Chick-fil-A Grilled Nuggets',emoji:'🍗',price:6.29,protein:38,calories:200,query:'chick fil a grilled nuggets',store:'doordash',type:'restaurant',source:"Chick-fil-A" },
+  { name:'Whey Protein (scoop)',emoji:'💪',price:1.10,protein:25,calories:120,query:'whey protein powder',  store:'amazon',    type:'supplement' },
 ];
 
 let fotdItem = null;
@@ -2425,11 +2918,15 @@ function initFOTD() {
   else badge.textContent = '✓ Solid Pick';
 
   document.getElementById('fotd-calc-btn').onclick = () => {
-    el('food-name').value = fotdItem.name;
-    el('price').value = fotdItem.price;
-    el('protein').value = fotdItem.protein;
-    el('calc-btn').click();
-    scrollToCalculatorOnMobile();
+    groceryCart.add({
+      name: fotdItem.name,
+      price: fotdItem.price,
+      protein: fotdItem.protein,
+      calories: fotdItem.calories || 0,
+      query: fotdItem.query || fotdItem.name,
+      store: fotdItem.store || 'instacart',
+      type: fotdItem.type || 'grocery'
+    });
   };
 
   document.getElementById('fotd-share-btn').onclick = () => {
@@ -2534,91 +3031,155 @@ window.generateShareCard=generateShareCard;
 // ═══════════════════════════════════════════════════
 // CHECKOUT COUNTER & SCRATCH CARD REWARD
 // ═══════════════════════════════════════════════════
-const CC_KEY='mvp_checkout_counter_v2';
-const SCRATCH_KEY='mvp_scratch_used';
-const CHECKOUTS_NEEDED=10;
+const CC_KEY = 'mvp_checkout_counter_v4';
 
-// Prize table — weights out of 10000
-const PRIZES=[
-  {label:'$10 OFF',value:10,  weight:9000},
-  {label:'$12 OFF',value:12,  weight: 900},
-  {label:'$25 OFF',value:25,  weight:  90},
-  {label:'$100 OFF',value:100,weight:   9},
-  {label:'$500 OFF',value:500,weight:   1},
-];
+const TIERS = {
+  big: {
+    key: 'big',
+    label: '🎟️ BIG PRIZE',
+    ordersNeeded: 4,
+    minOrder: 75,
+    scratchedKey: 'big_scratched',
+    countKey: 'big_count',
+    badgeColor: 'linear-gradient(90deg,#f97316,#ef4444)',
+    scratchColor: 'linear-gradient(135deg,#f97316,#ef4444)',
+    prizes: [
+      {label:'$0.50 OFF', value:0.50, weight:6500},
+      {label:'$1.00 OFF', value:1.00, weight:2200},
+      {label:'$2.50 OFF', value:2.50, weight:1000},
+      {label:'$10 OFF',   value:10,   weight:290},
+      {label:'$50 OFF',   value:50,   weight:10},
+    ],
+    emoji: '🎟️',
+    description: 'Big Prize Tier'
+  },
+  grand: {
+    key: 'grand',
+    label: '🏆 GRAND PRIZE',
+    ordersNeeded: 6,
+    minOrder: 150,
+    scratchedKey: 'grand_scratched',
+    countKey: 'grand_count',
+    badgeColor: 'linear-gradient(90deg,#ffd700,#00c2ff)',
+    scratchColor: 'linear-gradient(135deg,#ffd700,#f97316)',
+    prizes: [
+      {label:'$2.50 OFF', value:2.50, weight:6000},
+      {label:'$5 OFF',    value:5,    weight:2500},
+      {label:'$25 OFF',   value:25,   weight:1000},
+      {label:'$100 OFF',  value:100,  weight:490},
+      {label:'$250 OFF',  value:250,  weight:9},
+      {label:'$500 OFF!', value:500,  weight:1},
+    ],
+    emoji: '🏆',
+    description: 'Grand Prize Tier'
+  }
+};
 
-function rollPrize(){
-  const total=PRIZES.reduce((s,p)=>s+p.weight,0);
-  let r=Math.floor(Math.random()*total);
-  for(const p of PRIZES){ r-=p.weight; if(r<0) return p; }
-  return PRIZES[0];
+function rollPrize(tierKey){
+  const prizes = TIERS[tierKey].prizes;
+  const total = prizes.reduce((s,p)=>s+p.weight,0);
+  let r = Math.floor(Math.random()*total);
+  for(const p of prizes){ r-=p.weight; if(r<0) return p; }
+  return prizes[0];
 }
 
 function getCounterData(){
-  const now=new Date();
-  const monthKey=`${now.getFullYear()}-${now.getMonth()}`;
-  const raw=JSON.parse(localStorage.getItem(CC_KEY)||'{}');
-  if(raw.month!==monthKey){ raw.month=monthKey; raw.count=0; raw.scratched=false; localStorage.setItem(CC_KEY,JSON.stringify(raw)); }
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${now.getMonth()}`;
+  let raw = JSON.parse(localStorage.getItem(CC_KEY)||'{}');
+  if(raw.month !== monthKey){
+    raw = { month:monthKey, big_count:0, big_scratched:false, grand_count:0, grand_scratched:false, big_volume:0, grand_volume:0 };
+    localStorage.setItem(CC_KEY, JSON.stringify(raw));
+  }
   return raw;
 }
 
-function recordCheckout(){
-  const data=getCounterData();
-  if(data.scratched) return; // already used this month's scratch
-  data.count=Math.min((data.count||0)+1, CHECKOUTS_NEEDED);
-  localStorage.setItem(CC_KEY,JSON.stringify(data));
+function recordCheckout(orderAmount=80){
+  const data = getCounterData();
+
+  if(orderAmount >= TIERS.big.minOrder && !data.big_scratched){
+    data.big_count = Math.min((data.big_count||0)+1, TIERS.big.ordersNeeded);
+    data.big_volume = (data.big_volume||0) + orderAmount;
+  }
+  if(orderAmount >= TIERS.grand.minOrder && !data.grand_scratched){
+    data.grand_count = Math.min((data.grand_count||0)+1, TIERS.grand.ordersNeeded);
+    data.grand_volume = (data.grand_volume||0) + orderAmount;
+  }
+
+  localStorage.setItem(CC_KEY, JSON.stringify(data));
   updateRewardBanner();
 
-  if(data.count>=CHECKOUTS_NEEDED && !data.scratched){
-    setTimeout(showScratchCard, 600);
+  // Grand unlocks first — bigger moment
+  if(data.grand_count >= TIERS.grand.ordersNeeded && !data.grand_scratched){
+    setTimeout(()=>showScratchCard('grand'), 800);
+  } else if(data.big_count >= TIERS.big.ordersNeeded && !data.big_scratched){
+    setTimeout(()=>showScratchCard('big'), 800);
   }
 }
+window.recordCheckout = recordCheckout;
 
 function updateRewardBanner(){
-  const data=getCounterData();
-  const count=data.count||0;
-  const progressEl=document.getElementById('reward-banner-progress');
-  const textEl=document.getElementById('reward-banner-text');
-  if(!progressEl) return;
-  if(data.scratched){
-    progressEl.textContent='✓ Done';
-    if(textEl) textEl.innerHTML='🎉 Scratch card earned this month! See you next month.';
-  } else {
-    progressEl.textContent=`${count}/${CHECKOUTS_NEEDED}`;
-  }
+  const data = getCounterData();
+
+  // Big prize bar
+  const bigCount  = data.big_count||0;
+  const grandCount = data.grand_count||0;
+  const bigBar    = document.getElementById('big-prize-bar');
+  const grandBar  = document.getElementById('grand-prize-bar');
+  const bigCountEl   = document.getElementById('big-prize-count');
+  const grandCountEl = document.getElementById('grand-prize-count');
+
+  if(bigBar)    bigBar.style.width    = data.big_scratched   ? '100%' : `${(bigCount/TIERS.big.ordersNeeded)*100}%`;
+  if(grandBar)  grandBar.style.width  = data.grand_scratched ? '100%' : `${(grandCount/TIERS.grand.ordersNeeded)*100}%`;
+  if(bigCountEl)    bigCountEl.textContent    = data.big_scratched   ? '✓' : `${bigCount}/${TIERS.big.ordersNeeded}`;
+  if(grandCountEl)  grandCountEl.textContent  = data.grand_scratched ? '✓' : `${grandCount}/${TIERS.grand.ordersNeeded}`;
 }
 
-function showScratchCard(){
-  const overlay=document.getElementById('reward-modal-overlay');
-  const title=document.getElementById('reward-modal-title');
-  const body=document.getElementById('reward-modal-body');
-  const emoji=document.getElementById('reward-modal-emoji');
-  const hint=document.getElementById('scratch-hint');
-  const claimEl=document.getElementById('scratch-claim');
+function showScratchCard(tierKey){
+  const tier    = TIERS[tierKey];
+  const data    = getCounterData();
+  const overlay = document.getElementById('reward-modal-overlay');
+  const badge   = document.getElementById('reward-modal-tier-badge');
+  const emoji   = document.getElementById('reward-modal-emoji');
+  const title   = document.getElementById('reward-modal h2') || document.querySelector('#reward-modal h2');
+  const sub     = document.getElementById('reward-modal-subtitle');
+  const hint    = document.getElementById('scratch-hint');
+  const claim   = document.getElementById('scratch-claim');
+  const prizeEl = document.getElementById('scratch-prize');
+  const statTier    = document.getElementById('reward-stat-tier');
+  const statOrders  = document.getElementById('reward-stat-orders');
+  const statVolume  = document.getElementById('reward-stat-volume');
   if(!overlay) return;
 
-  const prize=rollPrize();
-  const prizeEl=document.getElementById('scratch-prize');
-  if(prizeEl) prizeEl.textContent=prize.label;
+  const prize = rollPrize(tierKey);
+  if(prizeEl){ prizeEl.textContent = prize.label; prizeEl.style.background = tier.scratchColor; }
+  if(badge)  { badge.textContent = tier.label; badge.style.background = tier.badgeColor; }
+  if(emoji)  emoji.textContent = tier.emoji;
 
-  hint.style.display='block';
-  claimEl.style.display='none';
-  emoji.textContent='🎰';
-  title.textContent='You Earned a Scratch Card!';
-  body.textContent='10 qualifying checkouts complete. Scratch below to reveal your reward.';
+  const titleEl = document.getElementById('reward-modal-title') || document.querySelector('#reward-modal h2');
+  if(titleEl) titleEl.textContent = tierKey==='grand' ? 'Grand Prize Unlocked!' : 'Big Prize Unlocked!';
+  if(sub) sub.textContent = tierKey==='grand'
+    ? `${tier.ordersNeeded} checkouts of $${tier.minOrder}+ complete this month`
+    : `${tier.ordersNeeded} checkouts of $${tier.minOrder}+ complete this month`;
 
+  const vol = tierKey==='grand' ? (data.grand_volume||0) : (data.big_volume||0);
+  if(statTier)   statTier.textContent   = tierKey==='grand' ? 'GRAND' : 'BIG';
+  if(statOrders) statOrders.textContent = `${tier.ordersNeeded}/${tier.ordersNeeded}`;
+  if(statVolume) statVolume.textContent = `$${vol.toLocaleString()}`;
+
+  hint.style.display  = 'block';
+  claim.style.display = 'none';
   overlay.classList.add('open');
+
   initScratch(()=>{
-    // Fully scratched
-    hint.style.display='none';
-    claimEl.style.display='block';
-    // Mark as used
-    const data=getCounterData();
-    data.scratched=true;
-    localStorage.setItem(CC_KEY,JSON.stringify(data));
+    hint.style.display  = 'none';
+    claim.style.display = 'block';
+    const wonEl = document.getElementById('scratch-won-amount');
+    if(wonEl) wonEl.textContent = prize.label;
+    const d = getCounterData();
+    d[tier.scratchedKey] = true;
+    localStorage.setItem(CC_KEY, JSON.stringify(d));
     updateRewardBanner();
-  
-    // Confetti burst
     if(typeof triggerEffects==='function') triggerEffects('Great Value');
   });
 }
