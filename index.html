@@ -1482,23 +1482,17 @@ const AFFILIATE = {
     tag: 'mostvalueprot-20',
     searchUrl: (query) => `https://www.amazon.com/s?k=${encodeURIComponent(query)}&tag=mostvalueprot-20`,
     baseUrl: 'https://www.amazon.com/?tag=mostvalueprot-20',
-    // Build a real multi-item Add-to-Cart URL using ASINs
-    // Up to 3 items can be added at once via this method (Amazon limit per URL)
+    // Direct product page link — most reliable, always works
     cartUrl: (items) => {
       const tag = 'mostvalueprot-20';
-      const asins = items
-        .filter(i => i.asin)
-        .slice(0, 3); // Amazon supports up to 3 items per cart URL
-      if (asins.length === 0) {
-        // Fallback to search for first item
-        const q = items[0] ? (items[0].query || items[0].name) : 'protein';
-        return `https://www.amazon.com/s?k=${encodeURIComponent(q)}&tag=${tag}`;
+      const first = items.find(i => i.asin) || items[0];
+      if (first && first.asin) {
+        return `https://www.amazon.com/dp/${first.asin}?tag=${tag}`;
       }
-      const params = asins.map((item, i) =>
-        `ASIN.${i+1}=${item.asin}&Quantity.${i+1}=1`
-      ).join('&');
-      return `https://www.amazon.com/gp/aws/cart/add.html?${params}&tag=${tag}`;
-    }
+      const q = first ? (first.query || first.name) : 'protein';
+      return `https://www.amazon.com/s?k=${encodeURIComponent(q)}&tag=${tag}`;
+    },
+    asinUrl: (asin) => `https://www.amazon.com/dp/${asin}?tag=mostvalueprot-20`
   },
   walmart: {
     affiliateId: 'YOUR_WALMART_AFFILIATE_ID',
@@ -1573,9 +1567,9 @@ function buildStoreUrl(store, items) {
   const firstQuery  = (items[0] && (items[0].query  || items[0].name)) || 'protein';
   const firstSource = (items[0] && (items[0].source || items[0].name)) || '';
   if (store === 'amazon') {
-    return items.some(i => i.asin)
-      ? AFFILIATE.amazon.cartUrl(items)
-      : AFFILIATE.amazon.searchUrl(firstQuery);
+    const firstWithAsin = items.find(i => i.asin);
+    if (firstWithAsin) return `https://www.amazon.com/dp/${firstWithAsin.asin}?tag=mostvalueprot-20`;
+    return AFFILIATE.amazon.searchUrl(firstQuery);
   }
   if (store === 'walmart')   return AFFILIATE.walmart.searchUrl(firstQuery);
   if (store === 'instacart') return AFFILIATE.instacart.searchUrl(firstQuery);
