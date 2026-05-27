@@ -71,7 +71,7 @@
   .container{width:100%;max-width:1200px;}
 
   /* ── HEADER ── */
-  header{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 0 28px;margin-bottom:24px;gap:0;}
+  header{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 0 12px;margin-bottom:12px;gap:0;}
   .title-block{min-width:0;margin-bottom:20px;}
   h1{margin:0 0 10px 0;font-family:var(--font-display);font-size:3rem;letter-spacing:0.04em;line-height:1.05;}
   .h1-highlight{font-size:1em;background:linear-gradient(45deg,#f97316,#ef4444);-webkit-background-clip:text;background-clip:text;color:transparent;}
@@ -100,6 +100,60 @@
   .near-me-btn-mvp .fire{font-style:normal;animation:flame-flicker 1.5s infinite linear;font-size:0.7rem;}
   .hero-secondary{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:0.85rem;}
   .seg{display:flex;gap:10px;}
+
+  /* ── HERO ACTION ROW ── */
+  .hero-action-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    width:100%;
+    max-width:520px;
+  }
+  .hero-action-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    padding:14px 8px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.04);
+    cursor:pointer;
+    font-family:var(--font-body);
+    color:#e2e8f8;
+    transition:transform 0.15s ease,background 0.15s ease,border-color 0.15s ease;
+    text-align:center;
+  }
+  .hero-action-btn:hover{transform:translateY(-3px);}
+  .hero-action-btn:active{transform:scale(0.97);}
+  .hero-action-icon{font-size:1.6rem;line-height:1;}
+  .hero-action-text strong{display:block;font-size:0.8rem;font-weight:800;letter-spacing:0.01em;margin-bottom:2px;}
+  .hero-action-text small{display:block;font-size:0.62rem;color:var(--muted);font-weight:500;line-height:1.3;}
+
+  .hero-action-grocery{
+    border-color:rgba(16,185,129,0.25);
+    background:rgba(16,185,129,0.06);
+  }
+  .hero-action-grocery:hover{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.4);}
+
+  .hero-action-delivery{
+    border-color:rgba(239,68,68,0.25);
+    background:rgba(239,68,68,0.06);
+  }
+  .hero-action-delivery:hover{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.4);}
+
+  .hero-action-amazon{
+    border-color:rgba(249,115,22,0.25);
+    background:rgba(249,115,22,0.06);
+  }
+  .hero-action-amazon:hover{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.4);}
+
+  @media(max-width:900px){
+    .hero-action-row{max-width:100%;}
+    .hero-action-btn{padding:12px 6px;}
+    .hero-action-text strong{font-size:0.75rem;}
+    .hero-action-text small{font-size:0.58rem;}
+  }
 
   #grocery-near-me-cta{
     width:100%;max-width:480px;
@@ -689,7 +743,7 @@
     <header>
       <div class="title-block">
         <h1>Find the <span class="h1-highlight">Cheapest Protein</span> Near You</h1>
-        <p class="subtitle">Ranked by protein per dollar. Near you, right now.</p>
+        <p class="subtitle">You're eating anyway. Eat smart. Get rewarded.</p>
         <p class="prices-note">Prices approximate — updated May 2026</p>
       </div>
       <div class="hero-cta">
@@ -697,10 +751,33 @@
           <span class="near-me-btn-label">📍 Find Best Protein Near Me</span>
           <span class="near-me-btn-mvp"><i class="fire">🔥</i> MVP — MostValueProtein.com <i class="fire">🔥</i></span>
         </button>
-        <button id="grocery-near-me-cta" onclick="openGroceryNearMe()">
-          🏪 Shop Grocery Near Me
-        </button>
-        <p id="social-proof-line" style="text-align:center;font-size:0.78rem;color:var(--muted);margin:8px 0 0 0;"></p>
+
+        <!-- 3 core action buttons -->
+        <div class="hero-action-row">
+          <button class="hero-action-btn hero-action-grocery" onclick="openGroceryNearMe()">
+            <span class="hero-action-icon">🛒</span>
+            <span class="hero-action-text">
+              <strong>Grocery Checkout</strong>
+              <small>Walmart · Kroger · Aldi · more</small>
+            </span>
+          </button>
+          <button class="hero-action-btn hero-action-delivery" onclick="openFastFoodDelivery()">
+            <span class="hero-action-icon">🍔</span>
+            <span class="hero-action-text">
+              <strong>Fast Food Delivery</strong>
+              <small>DoorDash · ranked by protein/$</small>
+            </span>
+          </button>
+          <button class="hero-action-btn hero-action-amazon" onclick="openAmazonDeals()">
+            <span class="hero-action-icon">📦</span>
+            <span class="hero-action-text">
+              <strong>Amazon Deals</strong>
+              <small>Bulk protein · ships today</small>
+            </span>
+          </button>
+        </div>
+
+        <p id="social-proof-line" style="text-align:center;font-size:0.78rem;color:var(--muted);margin:4px 0 0 0;"></p>
         <div class="hero-secondary">
           <span>or browse:</span>
           <div class="seg">
@@ -1319,6 +1396,20 @@
         </div>
       </div>
       <button class="primary" style="width:100%;padding:14px;font-size:1rem;margin-top:16px;background:linear-gradient(90deg,#f97316,#ef4444);" onclick="document.getElementById('reward-modal-overlay').classList.remove('open')">Close</button>
+    </div>
+  </div>
+
+  <!-- Amazon Deals Modal -->
+  <div id="amazon-deals-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9998;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s ease;">
+    <div id="amazon-deals-card" style="width:100%;max-width:620px;background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:20px 20px 0 0;padding:16px 16px 32px;max-height:85vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div>
+          <div style="font-size:1.05rem;font-weight:900;color:#e2e8f8;">📦 Top Protein Deals on Amazon</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Ranked by protein per dollar · ships to your door</div>
+        </div>
+        <button onclick="closeAmazonDeals()" style="background:none;border:none;font-size:1.8rem;color:var(--muted);cursor:pointer;line-height:1;padding:0;">×</button>
+      </div>
+      <div id="amazon-deals-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
     </div>
   </div>
 
@@ -2294,8 +2385,31 @@ document.addEventListener('DOMContentLoaded',()=>{
   const toggleModal=(show)=>modalOverlay.classList.toggle('hidden',!show);
   window.closeNearMeModal=()=>toggleModal(false);
 
+  // ── FAST FOOD DELIVERY — same modal, restaurant filter only ──
+  window.openFastFoodDelivery = function(){
+    buildMasterProteinData(); toggleModal(true);
+    document.getElementById('near-you-label').textContent='🍔 Fast Food Delivery Near You';
+    nearMeList.innerHTML='<p style="text-align:center;color:var(--muted);padding:20px 0;">Getting your location...</p>';
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(async position=>{
+        const userCoords={lat:position.coords.latitude,lon:position.coords.longitude};
+        nearMeList.innerHTML='<p style="text-align:center;color:var(--muted);padding:20px 0;">📍 Found you! Finding nearby restaurants...</p>';
+        let nearbyRestaurants=[];
+        try{ const fp=fetchNearbyRestaurants(userCoords.lat,userCoords.lon),tp=new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),30000)); nearbyRestaurants=await Promise.race([fp,tp]); } catch(e){ nearMeList.innerHTML='<p style="text-align:center;padding:12px;">⚠️ Search timed out. <button onclick="closeNearMeModal();setTimeout(openFastFoodDelivery,300);" class="primary" style="font-size:0.9rem;padding:8px 16px;">Try Again</button></p>'; return; }
+        const masterSources=[...new Set(masterProteinData.map(i=>i.source))],closestBySource=new Map();
+        nearbyRestaurants.forEach(r=>{ const n=r.tags&&r.tags.name; if(!n) return; const ms=masterSources.find(s=>nameMatches(n,s)); if(!ms) return; const lat=r.lat||(r.center&&r.center.lat),lon=r.lon||(r.center&&r.center.lon); if(!lat||!lon) return; const d=haversineDistance(userCoords,{lat,lon}); if(!closestBySource.has(ms)||d<closestBySource.get(ms)) closestBySource.set(ms,d); });
+        let matchedItems=[];
+        closestBySource.forEach((distance,ms)=>masterProteinData.filter(i=>i.source===ms).forEach(i=>matchedItems.push({...i,distance})));
+        if(matchedItems.length===0){ nearMeList.innerHTML='<p style="text-align:center;padding:20px;">No matching restaurants found nearby.</p>'; return; }
+        matchedItems.sort((a,b)=>b.ppd-a.ppd);
+        updateAndSortResults(matchedItems);
+      },error=>{ nearMeList.innerHTML=`<p style="text-align:center;color:var(--muted);padding:12px;">Location unavailable.</p><div style="text-align:center;"><button onclick="closeNearMeModal();setTimeout(openFastFoodDelivery,300);" class="primary">Try Again</button></div>`; },{timeout:10000,enableHighAccuracy:false});
+    } else nearMeList.innerHTML='<p style="text-align:center;color:var(--muted);">Geolocation not supported.</p>';
+  };
+
   ctaButton.addEventListener('click',()=>{
     buildMasterProteinData(); toggleModal(true);
+    document.getElementById('near-you-label').textContent='Best Protein Near You';
     nearMeList.innerHTML='<p style="text-align:center;color:var(--muted);padding:20px 0;">Getting your location...</p>';
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(async position=>{
@@ -3234,10 +3348,67 @@ function initScratch(onComplete){
   canvas.addEventListener('touchend',()=>scratching=false);
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-  updateRewardBanner();
+// ═══════════════════════════════════════════════════
+// AMAZON DEALS MODAL
+// ═══════════════════════════════════════════════════
+const AMAZON_DEALS = [
+  { name:'Canned Tuna (StarKist, 48-pack)', emoji:'🐟', price:39, protein:780, calories:3360, ppd:20, asin:'B003WT31QQ', desc:'20g protein per $1 · white albacore in water' },
+  { name:'Chicken Breast (Kirkland, canned 12pk)', emoji:'🍗', price:22, protein:374, calories:1080, ppd:17, asin:'B000FK7G20', desc:'17g protein per $1 · ready to eat, no prep' },
+  { name:'Liquid Egg Whites (365, 64oz)', emoji:'🥚', price:24, protein:360, calories:1800, ppd:15, asin:'B07CQXKHWZ', desc:'15g protein per $1 · pure protein, zero fat' },
+  { name:'Whey Protein (Optimum Nutrition, 5lb)', emoji:'💪', price:54, protein:540, calories:2700, ppd:10, asin:'B000QSNYGI', desc:'10g protein per $1 · gold standard whey' },
+  { name:'Beef Jerky (Jack Link\'s, variety 30ct)', emoji:'🥩', price:28, protein:196, calories:700, ppd:7, asin:'B08NW9TJQM', desc:'7g protein per $1 · no refrigeration needed' },
+  { name:'Protein Bars (Quest, 30-pack)', emoji:'🍫', price:35, protein:315, calories:6600, ppd:9, asin:'B09QLMKXRD', desc:'9g protein per $1 · 21g per bar, low sugar' },
+  { name:'Peanut Butter (Jif, 4-pack 40oz)', emoji:'🥜', price:26, protein:320, calories:12000, ppd:12.3, asin:'B01N4M93PW', desc:'12g protein per $1 · shelf stable, calorie dense' },
+  { name:'Sardines (Wild Planet, 12-pack)', emoji:'🐟', price:22, protein:264, calories:1440, ppd:12, asin:'B001EO5ZXA', desc:'12g protein per $1 · wild caught, omega-3s' },
+  { name:'Cottage Cheese (Good Culture, 6-pack)', emoji:'🥛', price:18, protein:180, calories:1080, ppd:10, asin:'B07BDMT5G3', desc:'10g protein per $1 · live cultures, high protein' },
+  { name:'Salmon (Wild Planet, canned 12pk)', emoji:'🐟', price:36, protein:300, calories:1440, ppd:8.3, asin:'B000MN2EOU', desc:'8g protein per $1 · wild caught sockeye' },
+];
 
-});
+// Sort by ppd
+AMAZON_DEALS.sort((a,b)=>b.ppd-a.ppd);
+
+function openAmazonDeals(){
+  const overlay=document.getElementById('amazon-deals-overlay');
+  const list=document.getElementById('amazon-deals-list');
+  const card=document.getElementById('amazon-deals-card');
+  overlay.style.opacity='1'; overlay.style.pointerEvents='auto';
+  card.style.transform='translateY(0)';
+  document.body.style.overflow='hidden';
+
+  list.innerHTML='';
+  const ranks=['🥇','🥈','🥉'];
+  AMAZON_DEALS.forEach((item,i)=>{
+    const rank=i<3?ranks[i]:`${i+1}.`;
+    const url=`https://www.amazon.com/dp/${item.asin}?tag=mostvalueprot-20`;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.06);';
+    row.innerHTML=`
+      <div style="font-size:1.1rem;flex-shrink:0;">${rank}</div>
+      <div style="font-size:1.4rem;flex-shrink:0;">${item.emoji}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:0.85rem;color:#e2e8f8;line-height:1.3;">${item.name}</div>
+        <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">${item.ppd.toFixed(1)}g/$1 · $${item.price} · ${item.desc}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;align-items:flex-end;">
+        <a href="${url}" target="_blank" rel="noopener" onclick="groceryCart.add({name:'${item.name.replace(/'/g,"\\'")}',price:${item.price},protein:${item.protein},calories:${item.calories},query:'${item.name}',store:'amazon',type:'supplement',asin:'${item.asin}'})" style="background:linear-gradient(90deg,#f97316,#ef4444);color:white;font-size:0.75rem;font-weight:800;text-decoration:none;padding:7px 11px;border-radius:8px;white-space:nowrap;">Buy on Amazon →</a>
+        <button onclick="groceryCart.add({name:'${item.name.replace(/'/g,"\\'")}',price:${item.price},protein:${item.protein},calories:${item.calories},query:'${item.name}',store:'amazon',type:'supplement',asin:'${item.asin}'})" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:#e2e8f8;font-size:0.7rem;font-weight:700;padding:5px 10px;border-radius:7px;cursor:pointer;white-space:nowrap;font-family:var(--font-body);">🛒 Add to Cart</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function closeAmazonDeals(){
+  const overlay=document.getElementById('amazon-deals-overlay');
+  const card=document.getElementById('amazon-deals-card');
+  overlay.style.opacity='0'; overlay.style.pointerEvents='none';
+  card.style.transform='translateY(100%)';
+  document.body.style.overflow='';
+}
+window.openAmazonDeals=openAmazonDeals;
+window.closeAmazonDeals=closeAmazonDeals;
+
+document.getElementById('amazon-deals-overlay').addEventListener('click',function(e){ if(e.target===this) closeAmazonDeals(); });
+
 </script>
 <script>
 if('serviceWorker' in navigator){
