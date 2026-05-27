@@ -814,7 +814,7 @@
         <section id="deals-shelf">
           <div id="deals-shelf-header">
             <span id="deals-shelf-title">📦 Best Bulk Buys</span>
-            <span id="deals-shelf-sub">Swipe · tap 🛒 to add</span>
+            <span id="deals-shelf-sub">Swipe · tap 🛒 to buy on Amazon</span>
           </div>
           <div id="deals-shelf-scroll">
             <div class="shelf-card" style="position:relative;" data-name="Canned Tuna (48-pack)" data-price="39" data-protein="780">
@@ -822,42 +822,42 @@
               <div class="shelf-name">Canned Tuna</div>
               <div class="shelf-ppd">20g/$1</div>
               <div class="shelf-price">$39</div>
-              <button class="shelf-add" onclick="event.stopPropagation();bulkAddToCart({name:'Canned Tuna (48-pack)',price:39,protein:780,calories:3360,query:'canned tuna bulk 48 pack',store:'amazon',type:'supplement',asin:'B003WT31QQ'});shelfFlash(this.closest('.shelf-card'))">🛒</button>
+              <button class="shelf-add" onclick="event.stopPropagation();window.open('https://www.amazon.com/dp/B003WT31QQ?tag=mostvalueprot-20','_blank');shelfFlash(this.closest('.shelf-card'))">🛒</button>
             </div>
             <div class="shelf-card" style="position:relative;" data-name="Canned Chicken (12-pack)" data-price="22" data-protein="374">
               <div class="shelf-emoji">🍗</div>
               <div class="shelf-name">Canned Chicken</div>
               <div class="shelf-ppd">17g/$1</div>
               <div class="shelf-price">$22</div>
-              <button class="shelf-add" onclick="event.stopPropagation();bulkAddToCart({name:'Canned Chicken (12-pack)',price:22,protein:374,calories:1080,query:'canned chicken breast 12 pack',store:'amazon',type:'supplement',asin:'B000FK7G20'});shelfFlash(this.closest('.shelf-card'))">🛒</button>
+              <button class="shelf-add" onclick="event.stopPropagation();window.open('https://www.amazon.com/dp/B000FK7G20?tag=mostvalueprot-20','_blank');shelfFlash(this.closest('.shelf-card'))">🛒</button>
             </div>
             <div class="shelf-card" style="position:relative;" data-name="Liquid Egg Whites (bulk)" data-price="24" data-protein="360">
               <div class="shelf-emoji">🥚</div>
               <div class="shelf-name">Egg Whites</div>
               <div class="shelf-ppd">15g/$1</div>
               <div class="shelf-price">$24</div>
-              <button class="shelf-add" onclick="event.stopPropagation();bulkAddToCart({name:'Liquid Egg Whites (bulk)',price:24,protein:360,calories:1800,query:'liquid egg whites carton bulk',store:'amazon',type:'supplement',asin:'B07CQXKHWZ'});shelfFlash(this.closest('.shelf-card'))">🛒</button>
+              <button class="shelf-add" onclick="event.stopPropagation();window.open('https://www.amazon.com/dp/B07CQXKHWZ?tag=mostvalueprot-20','_blank');shelfFlash(this.closest('.shelf-card'))">🛒</button>
             </div>
             <div class="shelf-card" style="position:relative;" data-name="Whey Protein (5lb)" data-price="54" data-protein="540">
               <div class="shelf-emoji">💪</div>
               <div class="shelf-name">Whey Protein</div>
               <div class="shelf-ppd">10g/$1</div>
               <div class="shelf-price">$54</div>
-              <button class="shelf-add" onclick="event.stopPropagation();bulkAddToCart({name:'Whey Protein (5lb)',price:54,protein:540,calories:2700,query:'optimum nutrition whey protein 5lb',store:'amazon',type:'supplement',asin:'B000QSNYGI'});shelfFlash(this.closest('.shelf-card'))">🛒</button>
+              <button class="shelf-add" onclick="event.stopPropagation();window.open('https://www.amazon.com/dp/B000QSNYGI?tag=mostvalueprot-20','_blank');shelfFlash(this.closest('.shelf-card'))">🛒</button>
             </div>
             <div class="shelf-card" style="position:relative;" data-name="Protein Bars (30-pack)" data-price="35" data-protein="315">
               <div class="shelf-emoji">🍫</div>
               <div class="shelf-name">Protein Bars</div>
               <div class="shelf-ppd">9g/$1</div>
               <div class="shelf-price">$35</div>
-              <button class="shelf-add" onclick="event.stopPropagation();bulkAddToCart({name:'Protein Bars (30-pack)',price:35,protein:315,calories:6600,query:'protein bars variety 30 pack',store:'amazon',type:'supplement',asin:'B09QLMKXRD'});shelfFlash(this.closest('.shelf-card'))">🛒</button>
+              <button class="shelf-add" onclick="event.stopPropagation();window.open('https://www.amazon.com/dp/B09QLMKXRD?tag=mostvalueprot-20','_blank');shelfFlash(this.closest('.shelf-card'))">🛒</button>
             </div>
             <div class="shelf-card" style="position:relative;" data-name="Beef Jerky (variety bulk)" data-price="28" data-protein="196">
               <div class="shelf-emoji">🥩</div>
               <div class="shelf-name">Beef Jerky</div>
               <div class="shelf-ppd">7g/$1</div>
               <div class="shelf-price">$28</div>
-              <button class="shelf-add" onclick="event.stopPropagation();bulkAddToCart({name:'Beef Jerky (variety bulk)',price:28,protein:196,calories:700,query:'beef jerky variety pack bulk',store:'amazon',type:'supplement',asin:'B08NW9TJQM'});shelfFlash(this.closest('.shelf-card'))">🛒</button>
+              <button class="shelf-add" onclick="event.stopPropagation();window.open('https://www.amazon.com/dp/B08NW9TJQM?tag=mostvalueprot-20','_blank');shelfFlash(this.closest('.shelf-card'))">🛒</button>
             </div>
           </div>
         </section>
@@ -1402,12 +1402,15 @@
   <!-- Amazon Deals Modal -->
   <div id="amazon-deals-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9998;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s ease;">
     <div id="amazon-deals-card" style="width:100%;max-width:620px;background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:20px 20px 0 0;padding:16px 16px 32px;max-height:85vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <div>
           <div style="font-size:1.05rem;font-weight:900;color:#e2e8f8;">📦 Top Protein Deals on Amazon</div>
           <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Ranked by protein per dollar · ships to your door</div>
         </div>
         <button onclick="closeAmazonDeals()" style="background:none;border:none;font-size:1.8rem;color:var(--muted);cursor:pointer;line-height:1;padding:0;">×</button>
+      </div>
+      <div style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:0.75rem;color:rgba(180,196,230,0.8);line-height:1.5;">
+        ⚠️ Due to Amazon's terms of service, each item must be purchased individually. Every purchase still counts toward your MVP reward. 🏆
       </div>
       <div id="amazon-deals-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
     </div>
@@ -1681,8 +1684,31 @@ function openSmartCheckout() {
 
     grocStores.forEach(store => {
       const meta = STORE_META[store];
-      const url  = referralTracker.appendToUrl(buildStoreUrl(store, grocItems));
       const isActive = store === activePref;
+
+      // Amazon — show one button per item since there's no real multi-cart URL
+      if (store === 'amazon') {
+        const amznWrap = document.createElement('div');
+        amznWrap.style.cssText = 'margin-bottom:8px;';
+        amznWrap.innerHTML = `<p style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin:0 0 6px 0;">📦 Buy each on Amazon</p><p style="font-size:0.72rem;color:var(--muted);margin:0 0 8px 0;line-height:1.5;">Due to Amazon's terms of service, items must be checked out individually. Each purchase still counts toward your MVP reward. 🏆</p>`;
+        grocItems.forEach(item => {
+          const itemUrl = item.asin
+            ? `https://www.amazon.com/dp/${item.asin}?tag=mostvalueprot-20`
+            : `https://www.amazon.com/s?k=${encodeURIComponent(item.query||item.name)}&tag=mostvalueprot-20`;
+          const a = document.createElement('a');
+          a.href = referralTracker.appendToUrl(itemUrl);
+          a.target = '_blank'; a.rel = 'noopener';
+          a.style.cssText = `display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-radius:10px;margin-bottom:6px;text-decoration:none;color:white;font-size:0.88rem;font-weight:700;background:#ff9900;transition:opacity 0.15s ease;`;
+          a.innerHTML = `<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.name}</span><span style="font-size:0.8rem;opacity:0.9;flex-shrink:0;">$${(item.price||0).toFixed(2)} · Buy →</span>`;
+          a.addEventListener('mouseover',()=>a.style.opacity='0.88');
+          a.addEventListener('mouseout',()=>a.style.opacity='1');
+          amznWrap.appendChild(a);
+        });
+        wrap.appendChild(amznWrap);
+        return;
+      }
+
+      const url  = referralTracker.appendToUrl(buildStoreUrl(store, grocItems));
       const btn = document.createElement('a');
       btn.href   = url;
       btn.target = '_blank';
@@ -2663,56 +2689,63 @@ function openGroceryNearMe() {
   const overlay = document.getElementById('grocery-near-me-overlay');
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  document.getElementById('grocery-near-me-sub').textContent = 'Finding grocery stores near you...';
-  document.getElementById('grocery-near-me-store-tabs').innerHTML = '';
-  document.getElementById('grocery-near-me-list').innerHTML = '<div style="text-align:center;padding:32px;"><div style="font-size:2.5rem;">🏪</div><div style="margin-top:12px;color:var(--muted);">Detecting nearby stores...</div></div>';
+  document.getElementById('grocery-near-me-sub').textContent = 'Finding stores near you...';
 
-  navigator.geolocation.getCurrentPosition(async pos => {
-    window._groceryUserLat = pos.coords.latitude;
-    window._groceryUserLon = pos.coords.longitude;
-
-    const elements = await fetchNearbyGroceryStores(pos.coords.latitude, pos.coords.longitude);
-    _nearbyStores = matchGroceryStore(elements);
-
-    // Build tabs — nearby stores first, then all others
+  // Show stores immediately while GPS loads in background
+  function renderTabs(orderedKeys) {
     const tabs = document.getElementById('grocery-near-me-store-tabs');
-    const allStoreKeys = Object.keys(GROCERY_STORES);
-
-    // Always show all 5 tabs, mark nearby ones
-    allStoreKeys.forEach(key => {
+    tabs.innerHTML = '';
+    orderedKeys.forEach((key, i) => {
       const store = GROCERY_STORES[key];
-      const nearby = _nearbyStores.find(s => s.key === key);
       const btn = document.createElement('button');
-      btn.className = 'grocery-store-tab' + (nearby ? ' nearby' : '');
-      btn.innerHTML = `<span class="tab-icon">${store.icon}</span><span class="tab-name">${store.name}</span>${nearby ? `<span class="tab-dist">${nearby.distance.toFixed(1)}mi</span>` : ''}`;
+      btn.className = 'grocery-store-tab' + (i === 0 ? ' active nearby' : '');
+      btn.innerHTML = `<span class="tab-icon">${store.icon}</span><span class="tab-name">${store.name}</span>${i === 0 ? '<span class="tab-dist">Nearest</span>' : ''}`;
       btn.onclick = () => showGroceryStoreItems(key);
       tabs.appendChild(btn);
     });
+    showGroceryStoreItems(orderedKeys[0]);
+  }
 
-    // Auto-select closest nearby store, or default to Walmart
-    const defaultKey = _nearbyStores.length > 0 ? _nearbyStores[0].key : 'walmart';
-    showGroceryStoreItems(defaultKey);
+  // Default order while GPS loads
+  const defaultOrder = ['walmart','kroger','aldi','target','wholefoods','heb'];
+  renderTabs(defaultOrder);
+  document.getElementById('grocery-near-me-sub').textContent = 'Stores near you — ranked by protein per dollar';
 
-    const sub = _nearbyStores.length > 0
-      ? `Found ${_nearbyStores.length} store${_nearbyStores.length>1?'s':''} near you — ranked by protein per dollar`
-      : 'No stores detected nearby — showing all stores';
-    document.getElementById('grocery-near-me-sub').textContent = sub;
+  // GPS in background — reorder if we can improve the suggestion
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
 
-  }, err => {
-    document.getElementById('grocery-near-me-sub').textContent = 'Location unavailable — browse all stores';
-    document.getElementById('grocery-near-me-list').innerHTML = '';
-    const allStoreKeys = Object.keys(GROCERY_STORES);
-    const tabs = document.getElementById('grocery-near-me-store-tabs');
-    allStoreKeys.forEach(key => {
-      const store = GROCERY_STORES[key];
-      const btn = document.createElement('button');
-      btn.className = 'grocery-store-tab';
-      btn.innerHTML = `<span class="tab-icon">${store.icon}</span><span class="tab-name">${store.name}</span>`;
-      btn.onclick = () => showGroceryStoreItems(key);
-      tabs.appendChild(btn);
-    });
-    showGroceryStoreItems('walmart');
-  });
+      // Regional logic based on coordinates
+      let orderedKeys;
+
+      // Texas / H-E-B country (roughly lat 26-36, lon -94 to -100)
+      if (lat >= 26 && lat <= 36 && lon >= -106 && lon <= -93) {
+        orderedKeys = ['heb','walmart','kroger','aldi','target','wholefoods'];
+        document.getElementById('grocery-near-me-sub').textContent = '📍 H-E-B country detected — showing your stores';
+      }
+      // Pacific Northwest / West Coast — Whole Foods more common
+      else if (lon <= -115) {
+        orderedKeys = ['walmart','target','wholefoods','kroger','aldi','heb'];
+        document.getElementById('grocery-near-me-sub').textContent = '📍 Stores near you — ranked by protein per dollar';
+      }
+      // Midwest — Aldi is everywhere
+      else if (lat >= 38 && lat <= 48 && lon >= -96 && lon <= -80) {
+        orderedKeys = ['aldi','walmart','kroger','target','wholefoods','heb'];
+        document.getElementById('grocery-near-me-sub').textContent = '📍 Stores near you — ranked by protein per dollar';
+      }
+      // Default
+      else {
+        orderedKeys = ['walmart','kroger','aldi','target','wholefoods','heb'];
+        document.getElementById('grocery-near-me-sub').textContent = '📍 Stores near you — ranked by protein per dollar';
+      }
+
+      renderTabs(orderedKeys);
+    }, () => {
+      // GPS failed — keep default, already showing
+    }, { timeout: 5000, maximumAge: 300000 });
+  }
 }
 
 function showGroceryStoreItems(storeKey) {
@@ -3384,8 +3417,7 @@ function openAmazonDeals(){
         <div style="font-size:0.7rem;color:var(--muted);margin-top:2px;">${item.ppd.toFixed(1)}g/$1 · $${item.price} · ${item.desc}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;align-items:flex-end;">
-        <a href="${url}" target="_blank" rel="noopener" onclick="groceryCart.add({name:'${item.name.replace(/'/g,"\\'")}',price:${item.price},protein:${item.protein},calories:${item.calories},query:'${item.name}',store:'amazon',type:'supplement',asin:'${item.asin}'})" style="background:linear-gradient(90deg,#f97316,#ef4444);color:white;font-size:0.75rem;font-weight:800;text-decoration:none;padding:7px 11px;border-radius:8px;white-space:nowrap;">Buy on Amazon →</a>
-        <button onclick="groceryCart.add({name:'${item.name.replace(/'/g,"\\'")}',price:${item.price},protein:${item.protein},calories:${item.calories},query:'${item.name}',store:'amazon',type:'supplement',asin:'${item.asin}'})" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);color:#e2e8f8;font-size:0.7rem;font-weight:700;padding:5px 10px;border-radius:7px;cursor:pointer;white-space:nowrap;font-family:var(--font-body);">🛒 Add to Cart</button>
+        <a href="${url}" target="_blank" rel="noopener" style="background:linear-gradient(90deg,#f97316,#ef4444);color:white;font-size:0.75rem;font-weight:800;text-decoration:none;padding:7px 11px;border-radius:8px;white-space:nowrap;">Buy on Amazon →</a>
       </div>`;
     list.appendChild(row);
   });
